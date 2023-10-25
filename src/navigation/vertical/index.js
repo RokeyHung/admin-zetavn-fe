@@ -23,6 +23,14 @@ const navigation = () => {
       path: '/account-settings'
     },
     {
+      sectionTitle: 'Quản lý bài viết'
+    },
+    {
+      title: 'Xem bài viết',
+      icon: FormatLetterCase,
+      path: '/quan-ly-bai-viet/xem-bai-viet'
+    },
+    {
       sectionTitle: 'User Interface'
     },
     {
