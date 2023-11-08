@@ -9,6 +9,7 @@ import CreditCardOutline from 'mdi-material-ui/CreditCardOutline'
 import AccountPlusOutline from 'mdi-material-ui/AccountPlusOutline'
 import AlertCircleOutline from 'mdi-material-ui/AlertCircleOutline'
 import GoogleCirclesExtended from 'mdi-material-ui/GoogleCirclesExtended'
+import { FaUsers, FaListAlt } from 'react-icons/fa'
 
 const navigation = () => {
   return [
@@ -26,9 +27,17 @@ const navigation = () => {
       sectionTitle: 'Quản lý bài viết'
     },
     {
-      title: 'Xem bài viết',
-      icon: FormatLetterCase,
-      path: '/quan-ly-bai-viet/xem-bai-viet'
+      title: 'Tất cả bài viết',
+      icon: FaListAlt,
+      path: '/quan-ly-bai-viet/tat-ca-bai-viet'
+    },
+    {
+      sectionTitle: 'Quản lý tài khoản'
+    },
+    {
+      title: 'Tất cả tài khoản',
+      icon: FaUsers,
+      path: '/quan-ly-tai-khoan/tat-ca-tai-khoan'
     },
     {
       sectionTitle: 'User Interface'

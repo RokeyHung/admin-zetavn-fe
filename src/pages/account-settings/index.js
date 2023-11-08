@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -23,6 +23,8 @@ import TabSecurity from 'src/views/account-settings/TabSecurity'
 // ** Third Party Styles Imports
 import 'react-datepicker/dist/react-datepicker.css'
 
+import { getOneUser } from '../../api/users'
+
 const Tab = styled(MuiTab)(({ theme }) => ({
   [theme.breakpoints.down('md')]: {
     minWidth: 100
@@ -44,10 +46,30 @@ const TabName = styled('span')(({ theme }) => ({
 const AccountSettings = () => {
   // ** State
   const [value, setValue] = useState('account')
+  const [dataUser, setDataUser] = useState({})
 
   const handleChange = (event, newValue) => {
     setValue(newValue)
   }
+
+  async function getData() {
+    try {
+      const response = await getOneUser('62404842-e806-47d0-b46c-79bebaf379d6')
+      const { code, message, data } = response
+      console.log(data)
+      if (code == 200) {
+        setDataUser(data)
+      }
+    } catch (error) {
+      alert(error.message)
+
+      return
+    }
+  }
+
+  useEffect(() => {
+    getData()
+  }, [])
 
   return (
     <Card>
@@ -87,13 +109,13 @@ const AccountSettings = () => {
         </TabList>
 
         <TabPanel sx={{ p: 0 }} value='account'>
-          <TabAccount />
+          <TabAccount dataUser={dataUser} />
         </TabPanel>
         <TabPanel sx={{ p: 0 }} value='security'>
-          <TabSecurity />
+          <TabSecurity dataUser={dataUser} />
         </TabPanel>
         <TabPanel sx={{ p: 0 }} value='info'>
-          <TabInfo />
+          <TabInfo dataUser={dataUser} />
         </TabPanel>
       </TabContext>
     </Card>

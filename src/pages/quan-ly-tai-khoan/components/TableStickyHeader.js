@@ -10,7 +10,7 @@ import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TablePagination from '@mui/material/TablePagination'
-import { getAllPosts, getOnePost } from '../../../api/posts'
+import { getAllUser } from '../../../api/users'
 import { FaEye } from 'react-icons/fa'
 import { Button } from '@mui/material'
 
@@ -53,7 +53,7 @@ const handleShowPostId = async postId => {
 const TableStickyHeader = () => {
   // ** States
   const [rows, setRows] = useState([])
-  const [page, setPage] = useState(0)
+  const [page, setPage] = useState(1)
   const [rowsPerPage, setRowsPerPage] = useState(10)
   const [status, setStatus] = useState('')
 
@@ -68,8 +68,9 @@ const TableStickyHeader = () => {
 
   async function getData() {
     try {
-      const response = await getAllPosts(status, page, rowsPerPage)
+      const response = await getAllUser(status, page, rowsPerPage)
       const { code, message, data } = response
+      console.log(data)
       if (code == 200) {
         const dataPost = data.data.map((item, index) =>
           createData(

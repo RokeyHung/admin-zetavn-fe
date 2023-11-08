@@ -26,7 +26,7 @@ const CustomInput = forwardRef((props, ref) => {
   return <TextField inputRef={ref} label='Birth Date' fullWidth {...props} />
 })
 
-const TabInfo = () => {
+const TabInfo = ({ dataUser }) => {
   // ** State
   const [date, setDate] = useState(null)
 
@@ -41,7 +41,8 @@ const TabInfo = () => {
               label='Bio'
               minRows={2}
               placeholder='Bio'
-              defaultValue='The name’s John Deo. I am a tireless seeker of knowledge, occasional purveyor of wisdom and also, coincidentally, a graphic designer. Algolia helps businesses across industries quickly create relevant 😎, scalable 😀, and lightning 😍 fast search and discovery experiences.'
+              defaultValue=''
+              value={dataUser.information?.aboutMe}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -51,61 +52,40 @@ const TabInfo = () => {
                 showYearDropdown
                 showMonthDropdown
                 id='account-settings-date'
-                placeholderText='MM-DD-YYYY'
+                placeholderText='MM/DD/YYYY'
                 customInput={<CustomInput />}
-                onChange={date => setDate(date)}
+                onChange={date => {
+                  setDate(date)
+                  console.log(date)
+                }}
               />
             </DatePickerWrapper>
           </Grid>
           <Grid item xs={12} sm={6}>
-            <TextField fullWidth type='number' label='Phone' placeholder='(123) 456-7890' />
+            <TextField fullWidth type='number' label='Phone' placeholder='' defaultValue='' value={dataUser?.phone} />
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
               fullWidth
-              label='Website'
-              placeholder='https://example.com/'
-              defaultValue='https://themeselection.com/'
+              label='Live at'
+              placeholder='New York'
+              defaultValue=''
+              value={dataUser.information?.livesAt}
             />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <FormControl fullWidth>
-              <InputLabel>Country</InputLabel>
-              <Select label='Country' defaultValue='USA'>
-                <MenuItem value='USA'>USA</MenuItem>
-                <MenuItem value='UK'>UK</MenuItem>
-                <MenuItem value='Australia'>Australia</MenuItem>
-                <MenuItem value='Germany'>Germany</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <FormControl fullWidth>
-              <InputLabel id='form-layouts-separator-multiple-select-label'>Languages</InputLabel>
-              <Select
-                multiple
-                defaultValue={['English']}
-                id='account-settings-multiple-select'
-                labelId='account-settings-multiple-select-label'
-                input={<OutlinedInput label='Languages' id='select-multiple-language' />}
-              >
-                <MenuItem value='English'>English</MenuItem>
-                <MenuItem value='French'>French</MenuItem>
-                <MenuItem value='Spanish'>Spanish</MenuItem>
-                <MenuItem value='Portuguese'>Portuguese</MenuItem>
-                <MenuItem value='Italian'>Italian</MenuItem>
-                <MenuItem value='German'>German</MenuItem>
-                <MenuItem value='Arabic'>Arabic</MenuItem>
-              </Select>
-            </FormControl>
           </Grid>
           <Grid item xs={12} sm={6}>
             <FormControl>
               <FormLabel sx={{ fontSize: '0.875rem' }}>Gender</FormLabel>
-              <RadioGroup row defaultValue='male' aria-label='gender' name='account-settings-info-radio'>
-                <FormControlLabel value='male' label='Male' control={<Radio />} />
-                <FormControlLabel value='female' label='Female' control={<Radio />} />
-                <FormControlLabel value='other' label='Other' control={<Radio />} />
+              <RadioGroup
+                row
+                defaultValue='MALE'
+                value={dataUser.information?.genderEnum}
+                aria-label='gender'
+                name='account-settings-info-radio'
+              >
+                <FormControlLabel value='MALE' label='Male' control={<Radio />} />
+                <FormControlLabel value='FEMALE' label='Female' control={<Radio />} />
+                <FormControlLabel value='OTHER' label='Other' control={<Radio />} />
               </RadioGroup>
             </FormControl>
           </Grid>
