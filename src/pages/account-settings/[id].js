@@ -47,7 +47,7 @@ const TabName = styled('span')(({ theme }) => ({
 const AccountSettings = () => {
   // ** State
   const router = useRouter()
-  const userId = router.query.id
+  const userId = router.query?.id
   const [value, setValue] = useState('account')
   const [dataUser, setDataUser] = useState({})
 
@@ -71,7 +71,7 @@ const AccountSettings = () => {
 
   useEffect(() => {
     getData()
-  }, [])
+  }, [userId])
 
   return (
     <Card>

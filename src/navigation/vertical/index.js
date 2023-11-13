@@ -14,14 +14,9 @@ import { FaUsers, FaListAlt } from 'react-icons/fa'
 const navigation = () => {
   return [
     {
-      title: 'Dashboard',
+      title: 'Thống kê',
       icon: HomeOutline,
       path: '/'
-    },
-    {
-      title: 'Account Settings',
-      icon: AccountCogOutline,
-      path: '/account-settings'
     },
     {
       sectionTitle: 'Quản lý bài viết'
@@ -38,6 +33,11 @@ const navigation = () => {
       title: 'Tất cả tài khoản',
       icon: FaUsers,
       path: '/quan-ly-tai-khoan/tat-ca-tai-khoan'
+    },
+    {
+      title: 'Cài đặt tài khoản',
+      icon: AccountCogOutline,
+      path: '/account-settings/'
     },
     {
       sectionTitle: 'User Interface'

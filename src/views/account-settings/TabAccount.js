@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -45,10 +45,16 @@ const ResetButtonStyled = styled(Button)(({ theme }) => ({
   }
 }))
 
-const TabAccount = ({ dataUser }) => {
+const TabAccount = ({ dataAccount }) => {
   // ** State
   const [openAlert, setOpenAlert] = useState(true)
   const [imgSrc, setImgSrc] = useState('/images/avatars/1.png')
+  const [dataUser, setDataUser] = useState(dataAccount)
+
+  useEffect(() => {
+    // Cập nhật dataUser khi dataAccount thay đổi
+    setDataUser(dataAccount)
+  }, [dataAccount])
 
   const onChange = file => {
     const reader = new FileReader()
@@ -58,8 +64,6 @@ const TabAccount = ({ dataUser }) => {
       reader.readAsDataURL(files[0])
     }
   }
-
-  console.log(dataUser.role)
 
   return (
     <CardContent>

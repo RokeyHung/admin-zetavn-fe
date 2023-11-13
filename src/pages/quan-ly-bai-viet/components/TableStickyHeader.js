@@ -93,7 +93,7 @@ const TableStickyHeader = () => {
 
   useEffect(() => {
     getData()
-  }, [])
+  }, [rowsPerPage])
 
   return (
     <Paper sx={{ width: '100%', overflow: 'hidden' }}>

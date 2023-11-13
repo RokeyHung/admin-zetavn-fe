@@ -10,52 +10,33 @@ import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TablePagination from '@mui/material/TablePagination'
-import { getAllUser } from '../../../api/users'
+import { getAllUser, getOneUser } from '../../../api/users'
 import { FaEye } from 'react-icons/fa'
 import { Button } from '@mui/material'
+import { useRouter } from 'next/router'
+import { http_url } from '../../../utils/index'
 
 const columns = [
-  { id: 'postId', label: 'Post Id', minWidth: 100 },
+  { id: 'id', label: 'UserId', minWidth: 100 },
   { id: 'display', label: 'Display Name', minWidth: 100 },
-  { id: 'content', label: 'Content', minWidth: 100 },
-  { id: 'accessModifier', label: 'Access Modifier', minWidth: 100 },
-  { id: 'createdAt', label: 'Created at', minWidth: 100 },
+  { id: 'username', label: 'Username', minWidth: 100 },
+  { id: 'role', label: 'Role', minWidth: 100 },
   { id: 'status', label: 'Status', minWidth: 100 },
+  { id: 'createdAt', label: 'Create at', minWidth: 60 },
   { id: 'edit', label: '', minWidth: 60 }
 ]
 
-function createData(postId, display, content, accessModifier, createdAt, status, edit) {
-  return { postId, display, content, accessModifier, createdAt, status, edit }
-}
-
-const editButtons = postId => {
-  return (
-    <div style={{ display: 'flex', gap: '10px' }}>
-      <Button onClick={() => handleShowPostId(postId)}>
-        <FaEye size={20} color='#A9B5CF' />
-      </Button>
-    </div>
-  )
-}
-
-const handleShowPostId = async postId => {
-  try {
-    const response = await getOnePost(postId)
-    const { code, message, data } = response
-    console.log(data)
-  } catch (error) {
-    alert(error.message)
-
-    return
-  }
+function createData(id, display, username, role, status, createdAt, edit) {
+  return { id, display, username, role, status, createdAt, edit }
 }
 
 const TableStickyHeader = () => {
   // ** States
   const [rows, setRows] = useState([])
-  const [page, setPage] = useState(1)
+  const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(10)
   const [status, setStatus] = useState('')
+  const router = useRouter()
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
@@ -66,27 +47,32 @@ const TableStickyHeader = () => {
     setPage(0)
   }
 
+  const editButtons = postId => {
+    return (
+      <div style={{ display: 'flex', gap: '10px' }}>
+        <Button onClick={() => handleShowUserId(postId)}>
+          <FaEye size={20} color='#A9B5CF' />
+        </Button>
+      </div>
+    )
+  }
+
+  const handleShowUserId = async userId => {
+    router.push(`${http_url}/account-settings/${userId}`)
+  }
+
   async function getData() {
     try {
-      const response = await getAllUser(status, page, rowsPerPage)
+      const response = await getAllUser(status, page, page + 1)
       const { code, message, data } = response
-      console.log(data)
       if (code == 200) {
         const dataPost = data.data.map((item, index) =>
-          createData(
-            item.id,
-            item.user.display,
-            item.content,
-            item.accessModifier,
-            item.createdAt,
-            item.status,
-            editButtons(item.id)
-          )
+          createData(item.id, item.display, item.username, item.role, item.status, item.createdAt, editButtons(item.id))
         )
         setRows(dataPost)
       }
     } catch (error) {
-      alert(error.message)
+      console.log(error.message)
 
       return
     }
@@ -94,7 +80,7 @@ const TableStickyHeader = () => {
 
   useEffect(() => {
     getData()
-  }, [])
+  }, [rowsPerPage])
 
   return (
     <Paper sx={{ width: '100%', overflow: 'hidden' }}>

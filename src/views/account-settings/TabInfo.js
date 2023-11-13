@@ -26,9 +26,10 @@ const CustomInput = forwardRef((props, ref) => {
   return <TextField inputRef={ref} label='Birth Date' fullWidth {...props} />
 })
 
-const TabInfo = ({ dataUser }) => {
+const TabInfo = ({ dataInfo }) => {
   // ** State
   const [date, setDate] = useState(null)
+  const [dataUser, setDataUser] = useState(dataInfo)
 
   return (
     <CardContent>
