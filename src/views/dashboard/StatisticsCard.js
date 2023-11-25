@@ -10,41 +10,81 @@ import CardContent from '@mui/material/CardContent'
 
 // ** Icons Imports
 import TrendingUp from 'mdi-material-ui/TrendingUp'
-import CurrencyUsd from 'mdi-material-ui/CurrencyUsd'
+import AccessPointNetwork from 'mdi-material-ui/AccessPointNetwork'
 import DotsVertical from 'mdi-material-ui/DotsVertical'
+import AccessPointPlus from 'mdi-material-ui/AccessPointPlus'
 import CellphoneLink from 'mdi-material-ui/CellphoneLink'
+import AccountConvertOutline from 'mdi-material-ui/AccountConvertOutline'
 import AccountOutline from 'mdi-material-ui/AccountOutline'
+import { useEffect, useState } from 'react'
 
-const salesData = [
-  {
-    stats: '245k',
-    title: 'Sales',
-    color: 'primary',
-    icon: <TrendingUp sx={{ fontSize: '1.75rem' }} />
-  },
-  {
-    stats: '12.5k',
-    title: 'Customers',
-    color: 'success',
-    icon: <AccountOutline sx={{ fontSize: '1.75rem' }} />
-  },
-  {
-    stats: '1.54k',
-    color: 'warning',
-    title: 'Products',
-    icon: <CellphoneLink sx={{ fontSize: '1.75rem' }} />
-  },
-  {
-    stats: '$88k',
-    color: 'info',
-    title: 'Revenue',
-    icon: <CurrencyUsd sx={{ fontSize: '1.75rem' }} />
+const renderStats = dataStatistic => {
+  const [dataTotal, setDataTotal] = useState([])
+
+  const caculator = data => {
+    setDataTotal(prevDataTotal => {
+      const newDataTotal = { ...prevDataTotal }
+
+      data.forEach(obj => {
+        Object.keys(obj).forEach(key => {
+          if (key !== 'date') {
+            newDataTotal[key] = (newDataTotal[key] || 0) + obj[key]
+          }
+        })
+      })
+
+      const calculatedStats = [
+        {
+          title: 'Bài viết mới',
+          stats: newDataTotal?.newPost || 0,
+          color: 'primary',
+          icon: <TrendingUp sx={{ fontSize: '1.75rem' }} />
+        },
+        {
+          title: 'Người dùng mới',
+          stats: newDataTotal?.newUser || 0,
+          color: 'success',
+          icon: <AccountOutline sx={{ fontSize: '1.75rem' }} />
+        },
+        {
+          title: 'Lượt tương tác',
+          color: 'primary',
+          stats:
+            (newDataTotal?.totalLikePost || 0) +
+            (newDataTotal?.totalCommentPost || 0) +
+            (newDataTotal?.totalSharePost || 0),
+          icon: <AccountConvertOutline sx={{ fontSize: '1.75rem' }} />
+        },
+        {
+          title: 'Lượt theo dõi',
+          color: 'success',
+          stats: newDataTotal?.totalFollower || 0,
+          icon: <AccessPointPlus sx={{ fontSize: '1.75rem' }} />
+        },
+        {
+          title: 'Thiết bị truy cập',
+          stats: newDataTotal?.totalBookmarkPost || 0,
+          color: 'warning',
+          icon: <CellphoneLink sx={{ fontSize: '1.75rem' }} />
+        },
+        {
+          title: 'Lượt tiếp cận',
+          stats: newDataTotal?.totalViewPost || 0,
+          color: 'info',
+          icon: <AccessPointNetwork sx={{ fontSize: '1.75rem' }} />
+        }
+      ]
+
+      return calculatedStats
+    })
   }
-]
 
-const renderStats = () => {
-  return salesData.map((item, index) => (
-    <Grid item xs={12} sm={3} key={index}>
+  useEffect(() => {
+    caculator(dataStatistic)
+  }, [dataStatistic])
+
+  return dataTotal.map((item, index) => (
+    <Grid item xs={12} sm={2} key={index}>
       <Box key={index} sx={{ display: 'flex', alignItems: 'center' }}>
         <Avatar
           variant='rounded'
@@ -68,22 +108,16 @@ const renderStats = () => {
   ))
 }
 
-const StatisticsCard = () => {
+const StatisticsCard = ({ dataStatistic }) => {
   return (
     <Card>
       <CardHeader
-        title='Statistics Card'
-        action={
-          <IconButton size='small' aria-label='settings' className='card-more-options' sx={{ color: 'text.secondary' }}>
-            <DotsVertical />
-          </IconButton>
-        }
+        title='Tổng quan'
         subheader={
           <Typography variant='body2'>
             <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
-              Total 48.5% growth
-            </Box>{' '}
-            😎 this month
+              Tăng trưởng trung bình trong khoảng thời gian này
+            </Box>
           </Typography>
         }
         titleTypographyProps={{
@@ -96,7 +130,7 @@ const StatisticsCard = () => {
       />
       <CardContent sx={{ pt: theme => `${theme.spacing(3)} !important` }}>
         <Grid container spacing={[5, 0]}>
-          {renderStats()}
+          {renderStats(dataStatistic)}
         </Grid>
       </CardContent>
     </Card>

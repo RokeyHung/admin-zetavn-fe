@@ -1,30 +1,18 @@
-// ** MUI Imports
 import Grid from '@mui/material/Grid'
 import { forwardRef, useState } from 'react'
-
-// ** Icons Imports
-import Poll from 'mdi-material-ui/Poll'
-import CurrencyUsd from 'mdi-material-ui/CurrencyUsd'
-import HelpCircleOutline from 'mdi-material-ui/HelpCircleOutline'
-import BriefcaseVariantOutline from 'mdi-material-ui/BriefcaseVariantOutline'
-
-// ** Custom Components Imports
-import CardStatisticsVerticalComponent from 'src/@core/components/card-statistics/card-stats-vertical'
-
-// ** Styled Component Import
+import Button from '@mui/material/Button'
 import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
-
-// ** Demo Components Imports
-import Table from 'src/views/dashboard/Table'
-import Trophy from 'src/views/dashboard/Trophy'
-import TotalEarning from 'src/views/dashboard/TotalEarning'
+import TableTop10User from 'src/views/dashboard/TableTop10User'
+import TableTop10Post from 'src/views/dashboard/TableTop10Post'
 import StatisticsCard from 'src/views/dashboard/StatisticsCard'
 import WeeklyOverview from 'src/views/dashboard/WeeklyOverview'
-import DepositWithdraw from 'src/views/dashboard/DepositWithdraw'
-import SalesByCountries from 'src/views/dashboard/SalesByCountries'
 import TextField from '@mui/material/TextField'
 import DatePicker from 'react-datepicker'
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
+import { subDays } from 'date-fns'
+import { dashboardInteract, statisticsPostPopular, statisticsUserPopular } from 'src/api/statistics'
+import { useEffect } from 'react'
 
 const CustomInputStart = forwardRef((props, ref) => {
   return <TextField inputRef={ref} label='Start' fullWidth {...props} />
@@ -35,38 +23,73 @@ const CustomInputEnd = forwardRef((props, ref) => {
 })
 
 const Dashboard = () => {
-  // ** State
+  const [dateStart, setDateStart] = useState(subDays(new Date(), 6))
+  const [dateEnd, setDateEnd] = useState(new Date())
+  const [dataUser, setDataUser] = useState([])
+  const [dataPost, setDataPost] = useState([])
+  const [dataStatistic, setDataStatistic] = useState([])
 
-  const [dateStart, setDateStart] = useState(null)
-  const [dateEnd, setDateEnd] = useState(null)
+  async function getData() {
+    try {
+      const getStatistic = await dashboardInteract(
+        dateStart.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit'
+        }),
+        dateEnd.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit'
+        })
+      )
+      const statisticsPost = await statisticsPostPopular()
+      const statisticsUser = await statisticsUserPopular()
+
+      const { code, message, data } = getStatistic
+      setDataStatistic(data.data)
+      setDataUser(statisticsUser.data)
+      setDataPost(statisticsPost.data)
+    } catch (error) {
+      console.log(error.message)
+
+      return
+    }
+  }
+
+  useEffect(() => {
+    getData()
+  }, [])
 
   return (
     <ApexChartWrapper>
       <Grid container spacing={6}>
-        <Grid container>
-          <Grid item xs={4}>
+        <Grid container spacing={3}>
+          <Grid item xs={3}>
             <Grid container spacing={3}>
               <Grid item xs={4}></Grid>
               <Grid item xs={4}></Grid>
               <Grid item xs={4}></Grid>
             </Grid>
           </Grid>
-          <Grid item xs={4}>
+
+          <Grid item xs={3}>
             <Grid container spacing={3}>
               <Grid item xs={4}></Grid>
               <Grid item xs={4}></Grid>
               <Grid item xs={4}></Grid>
             </Grid>
           </Grid>
-          <Grid item xs={4}>
+
+          <Grid item xs={6}>
             <Grid container spacing={3}>
-              <Grid item xs={6}>
+              <Grid item xs={5}>
                 <DatePickerWrapper>
                   <DatePicker
                     selected={dateStart}
                     showYearDropdown
                     showMonthDropdown
-                    id='account-settings-date'
+                    id='account-settings-date-start'
                     placeholderText='MM/DD/YYYY'
                     customInput={<CustomInputStart />}
                     onChange={date => {
@@ -76,13 +99,13 @@ const Dashboard = () => {
                   />
                 </DatePickerWrapper>
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={5}>
                 <DatePickerWrapper>
                   <DatePicker
                     selected={dateEnd}
                     showYearDropdown
                     showMonthDropdown
-                    id='account-settings-date'
+                    id='account-settings-date-end'
                     placeholderText='MM/DD/YYYY'
                     customInput={<CustomInputEnd />}
                     onChange={date => {
@@ -92,75 +115,27 @@ const Dashboard = () => {
                   />
                 </DatePickerWrapper>
               </Grid>
+              <Grid item xs={2} style={{ display: 'flex', alignItems: 'center' }}>
+                <Button variant='contained' style={{ width: '100%', fontSize: 15 }}>
+                  Apply
+                </Button>
+              </Grid>
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={12} md={4}>
-          <Trophy />
-        </Grid>
-        <Grid item xs={12} md={8}>
-          <StatisticsCard />
-        </Grid>
-        <Grid item xs={12} md={6} lg={4}>
-          <WeeklyOverview />
-        </Grid>
-        <Grid item xs={12} md={6} lg={4}>
-          <TotalEarning />
-        </Grid>
-        <Grid item xs={12} md={6} lg={4}>
-          <Grid container spacing={6}>
-            <Grid item xs={6}>
-              <CardStatisticsVerticalComponent
-                stats='$25.6k'
-                icon={<Poll />}
-                color='success'
-                trendNumber='+42%'
-                title='Total Profit'
-                subtitle='Weekly Profit'
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <CardStatisticsVerticalComponent
-                stats='$78'
-                title='Refunds'
-                trend='negative'
-                color='secondary'
-                trendNumber='-15%'
-                subtitle='Past Month'
-                icon={<CurrencyUsd />}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <CardStatisticsVerticalComponent
-                stats='862'
-                trend='negative'
-                trendNumber='-18%'
-                title='New Project'
-                subtitle='Yearly Project'
-                icon={<BriefcaseVariantOutline />}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <CardStatisticsVerticalComponent
-                stats='15'
-                color='warning'
-                trend='negative'
-                trendNumber='-18%'
-                subtitle='Last Week'
-                title='Sales Queries'
-                icon={<HelpCircleOutline />}
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid item xs={12} md={6} lg={4}>
-          <SalesByCountries />
-        </Grid>
-        <Grid item xs={12} md={12} lg={8}>
-          <DepositWithdraw />
+        <Grid item xs={12} md={12}>
+          <StatisticsCard dataStatistic={dataStatistic} />
         </Grid>
         <Grid item xs={12}>
-          <Table />
+          <WeeklyOverview dataStatistic={dataStatistic} />
+        </Grid>
+        <Grid container item spacing={6}>
+          <Grid item xs={6}>
+            <TableTop10User dataRow={dataUser} />
+          </Grid>
+          <Grid item xs={6}>
+            <TableTop10Post dataRow={dataPost} />
+          </Grid>
         </Grid>
       </Grid>
     </ApexChartWrapper>

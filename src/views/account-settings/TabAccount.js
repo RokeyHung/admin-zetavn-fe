@@ -74,7 +74,7 @@ const TabAccount = ({ dataAccount }) => {
               <ImgStyled src={dataUser.avatar || imgSrc} alt='Profile Pic' />
               <Box>
                 <ButtonStyled component='label' variant='contained' htmlFor='account-settings-upload-image'>
-                  Upload New Photo
+                  Tải hình ảnh
                   <input
                     hidden
                     type='file'
@@ -169,14 +169,14 @@ const TabAccount = ({ dataAccount }) => {
             </Grid>
           ) : null} */}
 
-          <Grid item xs={12}>
+          {/* <Grid item xs={12}>
             <Button variant='contained' sx={{ marginRight: 3.5 }}>
               Save Changes
             </Button>
             <Button type='reset' variant='outlined' color='secondary'>
               Reset
             </Button>
-          </Grid>
+          </Grid> */}
         </Grid>
       </form>
     </CardContent>

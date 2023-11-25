@@ -1,22 +1,30 @@
 // ** MUI Imports
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
-import Button from '@mui/material/Button'
 import { useTheme } from '@mui/material/styles'
 import CardHeader from '@mui/material/CardHeader'
-import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
-
-// ** Icons Imports
-import DotsVertical from 'mdi-material-ui/DotsVertical'
-
-// ** Custom Components Imports
 import ReactApexcharts from 'src/@core/components/react-apexcharts'
 
-const WeeklyOverview = () => {
-  // ** Hook
+function calculateAverageGrowth(data, fieldName) {
+  if (!data || data.length === 0 || !data[0].hasOwnProperty(fieldName)) {
+    console.error('Invalid data or field name.')
+    return null
+  }
+  const totalFieldValue = data.reduce((sum, item) => sum + item[fieldName], 0)
+  const averageGrowth = totalFieldValue / data.length
+
+  return averageGrowth
+}
+
+const WeeklyOverview = ({ dataStatistic }) => {
   const theme = useTheme()
+
+  const chartData = dataStatistic.map(item => ({
+    x: new Date(item.date[0], item.date[1] - 1, item.date[2]),
+    y: item.totalViewPost || 0
+  }))
 
   const options = {
     chart: {
@@ -63,12 +71,14 @@ const WeeklyOverview = () => {
         filter: { type: 'none' }
       }
     },
+
     xaxis: {
-      categories: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+      type: 'datetime', // Đặt kiểu của trục x là datetime
+      categories: chartData.map(item => item.x.getTime()), // Chuyển đổi thời gian thành timestamp
       tickPlacement: 'on',
-      labels: { show: false },
-      axisTicks: { show: false },
-      axisBorder: { show: false }
+      labels: { show: true, datetimeUTC: false, format: 'dd/MM' }, // Format hiển thị ngày tháng
+      axisTicks: { show: true },
+      axisBorder: { show: true }
     },
     yaxis: {
       show: true,
@@ -87,23 +97,21 @@ const WeeklyOverview = () => {
         titleTypographyProps={{
           sx: { lineHeight: '2rem !important', letterSpacing: '0.15px !important' }
         }}
-        action={
-          <IconButton size='small' aria-label='settings' className='card-more-options' sx={{ color: 'text.secondary' }}>
-            <DotsVertical />
-          </IconButton>
-        }
       />
       <CardContent sx={{ '& .apexcharts-xcrosshairs.apexcharts-active': { opacity: 0 } }}>
-        <ReactApexcharts type='bar' height={205} options={options} series={[{ data: [37, 57, 45, 75, 57, 40, 65] }]} />
-        <Box sx={{ mb: 7, display: 'flex', alignItems: 'center' }}>
-          <Typography variant='h5' sx={{ mr: 4 }}>
-            45%
+        <ReactApexcharts
+          type='bar'
+          height={205}
+          options={options}
+          series={[{ name: 'Total View Post', data: chartData }]}
+        />
+        <Box sx={{ mt: 7, mb: 7, display: 'flex', alignItems: 'center' }}>
+          <Typography variant='body2'>
+            {`Mức tăng trưởng đã được cải thiện ` +
+              calculateAverageGrowth(dataStatistic, 'newUser') +
+              `% 😎 so với giai đoạn trước.`}
           </Typography>
-          <Typography variant='body2'>Your sales performance is 45% 😎 better compared to last month</Typography>
         </Box>
-        <Button fullWidth variant='contained'>
-          Details
-        </Button>
       </CardContent>
     </Card>
   )

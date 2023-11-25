@@ -26,3 +26,36 @@ export const statisticsPosts = async (startDay, endDay, pageNumber, pageSize) =>
     throw error
   }
 }
+
+export const dashboardInteract = async (startDate, endDate) => {
+  try {
+    const response = await axios.get(`${api_url}/admins/statistics?startDate=${startDate}&endDate=${endDate}`)
+
+    return response.data
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+
+export const statisticsPostPopular = async () => {
+  try {
+    const response = await axios.get(`${api_url}/admins/statistics/posts/popular`)
+
+    return response.data
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+
+export const statisticsUserPopular = async () => {
+  try {
+    const response = await axios.get(`${api_url}/admins/statistics/users/popular`)
+
+    return response.data
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
