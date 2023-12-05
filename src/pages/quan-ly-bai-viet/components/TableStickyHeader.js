@@ -16,11 +16,11 @@ import { Button } from '@mui/material'
 
 const columns = [
   { id: 'postId', label: 'Post Id', minWidth: 100 },
-  { id: 'display', label: 'Display Name', minWidth: 100 },
+  { id: 'display', label: 'Tên người dùng', minWidth: 180 },
   { id: 'content', label: 'Content', minWidth: 100 },
-  { id: 'accessModifier', label: 'Access Modifier', minWidth: 100 },
-  { id: 'createdAt', label: 'Created at', minWidth: 100 },
-  { id: 'status', label: 'Status', minWidth: 100 },
+  { id: 'accessModifier', label: 'Phạm vi bài viết', minWidth: 160 },
+  { id: 'createdAt', label: 'Tạo ngày', minWidth: 100 },
+  { id: 'status', label: 'Trạng thái', minWidth: 120 },
   { id: 'edit', label: '', minWidth: 60 }
 ]
 
@@ -75,7 +75,7 @@ const TableStickyHeader = () => {
           createData(
             item.id,
             item.user.display,
-            item.content,
+            item.content.substring(0, 100) + '...',
             item.accessModifier,
             item.createdAt,
             item.status,
