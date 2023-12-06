@@ -28,6 +28,7 @@ const Dashboard = () => {
   const [dataUser, setDataUser] = useState([])
   const [dataPost, setDataPost] = useState([])
   const [dataStatistic, setDataStatistic] = useState([])
+  const [dataChart, setDataChart] = useState([])
 
   async function getData() {
     try {
@@ -48,6 +49,9 @@ const Dashboard = () => {
 
       const { code, message, data } = getStatistic
       setDataStatistic(data.data)
+      setDataChart(
+        data.data.map(item => ({ date: item.date, dataDay: item.newPost, title: 'Bài viết mới', color: 'primary' }))
+      )
       setDataUser(statisticsUser.data)
       setDataPost(statisticsPost.data)
     } catch (error) {
@@ -60,6 +64,10 @@ const Dashboard = () => {
   useEffect(() => {
     getData()
   }, [])
+
+  const handleSubmitDate = async () => {
+    await getData()
+  }
 
   return (
     <ApexChartWrapper>
@@ -116,7 +124,7 @@ const Dashboard = () => {
                 </DatePickerWrapper>
               </Grid>
               <Grid item xs={2} style={{ display: 'flex', alignItems: 'center' }}>
-                <Button variant='contained' style={{ width: '100%', fontSize: 15 }}>
+                <Button onClick={handleSubmitDate} variant='contained' style={{ width: '100%', fontSize: 15 }}>
                   Apply
                 </Button>
               </Grid>
@@ -124,10 +132,10 @@ const Dashboard = () => {
           </Grid>
         </Grid>
         <Grid item xs={12} md={12}>
-          <StatisticsCard dataStatistic={dataStatistic} />
+          <StatisticsCard dataStatistic={dataStatistic} setDataChart={setDataChart} />
         </Grid>
         <Grid item xs={12}>
-          <WeeklyOverview dataStatistic={dataStatistic} />
+          <WeeklyOverview dataChart={dataChart} />
         </Grid>
         <Grid container item spacing={6}>
           <Grid item xs={6}>
