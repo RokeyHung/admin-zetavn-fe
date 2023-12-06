@@ -23,7 +23,7 @@ import DatePicker from 'react-datepicker'
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
 
 const CustomInput = forwardRef((props, ref) => {
-  return <TextField inputRef={ref} label='Birth Date' fullWidth {...props} />
+  return <TextField inputRef={ref} label='Ngày sinh' fullWidth {...props} />
 })
 
 const TabInfo = ({ dataInfo }) => {
@@ -39,9 +39,9 @@ const TabInfo = ({ dataInfo }) => {
             <TextField
               fullWidth
               multiline
-              label='Bio'
+              label='Giới thiệu'
               minRows={2}
-              placeholder='Bio'
+              placeholder='Thông tin giới thiệu'
               defaultValue=''
               value={dataUser.information?.aboutMe}
             />
@@ -63,20 +63,27 @@ const TabInfo = ({ dataInfo }) => {
             </DatePickerWrapper>
           </Grid>
           <Grid item xs={12} sm={6}>
-            <TextField fullWidth type='number' label='Phone' placeholder='' defaultValue='' value={dataUser?.phone} />
+            <TextField
+              fullWidth
+              type='number'
+              label='Điện thoại'
+              placeholder=''
+              defaultValue=''
+              value={dataUser?.phone}
+            />
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
               fullWidth
-              label='Live at'
-              placeholder='New York'
+              label='Sống ở'
+              placeholder='Nhập nơi sống'
               defaultValue=''
               value={dataUser.information?.livesAt}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
             <FormControl>
-              <FormLabel sx={{ fontSize: '0.875rem' }}>Gender</FormLabel>
+              <FormLabel sx={{ fontSize: '0.875rem' }}>Giới tính</FormLabel>
               <RadioGroup
                 row
                 defaultValue='MALE'
@@ -84,9 +91,9 @@ const TabInfo = ({ dataInfo }) => {
                 aria-label='gender'
                 name='account-settings-info-radio'
               >
-                <FormControlLabel value='MALE' label='Male' control={<Radio />} />
-                <FormControlLabel value='FEMALE' label='Female' control={<Radio />} />
-                <FormControlLabel value='OTHER' label='Other' control={<Radio />} />
+                <FormControlLabel value='MALE' label='Nam' control={<Radio />} />
+                <FormControlLabel value='FEMALE' label='Nữ' control={<Radio />} />
+                <FormControlLabel value='OTHER' label='Khác' control={<Radio />} />
               </RadioGroup>
             </FormControl>
           </Grid>

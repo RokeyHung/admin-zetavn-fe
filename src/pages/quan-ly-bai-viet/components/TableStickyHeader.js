@@ -15,12 +15,12 @@ import { FaEye } from 'react-icons/fa'
 import { Button } from '@mui/material'
 
 const columns = [
-  { id: 'postId', label: 'Post Id', minWidth: 100 },
-  { id: 'display', label: 'Display Name', minWidth: 100 },
-  { id: 'content', label: 'Content', minWidth: 100 },
-  { id: 'accessModifier', label: 'Access Modifier', minWidth: 100 },
-  { id: 'createdAt', label: 'Created at', minWidth: 100 },
-  { id: 'status', label: 'Status', minWidth: 100 },
+  { id: 'postId', label: 'Id', minWidth: 100 },
+  { id: 'display', label: 'Tên', minWidth: 100 },
+  { id: 'content', label: 'Nội dung', minWidth: 100 },
+  { id: 'accessModifier', label: 'Quyền truy cập', minWidth: 100 },
+  { id: 'createdAt', label: 'Ngày tạo', minWidth: 100 },
+  { id: 'status', label: 'Trạng thái', minWidth: 100 },
   { id: 'edit', label: '', minWidth: 60 }
 ]
 

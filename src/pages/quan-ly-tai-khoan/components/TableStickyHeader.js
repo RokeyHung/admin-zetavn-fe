@@ -17,12 +17,12 @@ import { useRouter } from 'next/router'
 import { http_url } from '../../../utils/index'
 
 const columns = [
-  { id: 'id', label: 'UserId', minWidth: 100 },
-  { id: 'display', label: 'Display Name', minWidth: 100 },
+  { id: 'id', label: 'Id', minWidth: 100 },
+  { id: 'display', label: 'Họ và tên', minWidth: 100 },
   { id: 'username', label: 'Username', minWidth: 100 },
-  { id: 'role', label: 'Role', minWidth: 100 },
-  { id: 'status', label: 'Status', minWidth: 100 },
-  { id: 'createdAt', label: 'Create at', minWidth: 60 },
+  { id: 'role', label: 'Quyền', minWidth: 100 },
+  { id: 'status', label: 'Trạng thái', minWidth: 100 },
+  { id: 'createdAt', label: 'Ngày tạo', minWidth: 60 },
   { id: 'edit', label: '', minWidth: 60 }
 ]
 

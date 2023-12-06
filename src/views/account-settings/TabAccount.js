@@ -84,46 +84,27 @@ const TabAccount = ({ dataAccount }) => {
                   />
                 </ButtonStyled>
                 <ResetButtonStyled color='error' variant='outlined' onClick={() => setImgSrc('/images/avatars/1.png')}>
-                  Reset
+                  Xóa
                 </ResetButtonStyled>
                 <Typography variant='body2' sx={{ marginTop: 5 }}>
-                  Allowed PNG or JPEG. Max size of 800K.
+                  Chỉ tải ảnh có định dạng PNG hoặc JPEG. Size tối đa 10Mb.
                 </Typography>
               </Box>
             </Box>
           </Grid>
 
           <Grid item xs={12} sm={6}>
-            <TextField
-              fullWidth
-              label='Username'
-              placeholder='johnDoe'
-              defaultValue={'johnDoe'}
-              value={dataUser.username}
-            />
+            <TextField fullWidth label='Username' placeholder='Nhập username' value={dataUser.username} />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <TextField
-              fullWidth
-              label='Name'
-              placeholder='John Doe'
-              defaultValue={'John Doe'}
-              value={dataUser.display}
-            />
+            <TextField fullWidth label='Tên' placeholder='Nhập tên' value={dataUser.display} />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <TextField
-              fullWidth
-              type='email'
-              label='Email'
-              placeholder='johnDoe@example.com'
-              defaultValue={dataUser.email || 'johnDoe@example.com'}
-              value={dataUser.email}
-            />
+            <TextField fullWidth type='email' label='Email' defaultValue={dataUser.email} value={dataUser.email} />
           </Grid>
           <Grid item xs={12} sm={6}>
             <FormControl fullWidth>
-              <InputLabel>Role</InputLabel>
+              <InputLabel>Vai trờ</InputLabel>
               <Select label='Role' value={dataUser.role}>
                 <MenuItem value='ADMIN'>Admin</MenuItem>
                 <MenuItem value='USER'>User</MenuItem>
@@ -132,7 +113,7 @@ const TabAccount = ({ dataAccount }) => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <FormControl fullWidth>
-              <InputLabel>Status</InputLabel>
+              <InputLabel>Trạng thái</InputLabel>
               <Select label='Status' value={dataUser.status}>
                 <MenuItem value='ACTIVE'>Active</MenuItem>
                 <MenuItem value='LOCKED'>Locked</MenuItem>
@@ -143,8 +124,7 @@ const TabAccount = ({ dataAccount }) => {
           <Grid item xs={12} sm={6}>
             <TextField
               fullWidth
-              label='Company'
-              placeholder='ABC Pvt. Ltd.'
+              label='Công ty'
               defaultValue=''
               value={dataUser.information?.work}
             />
