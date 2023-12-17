@@ -14,7 +14,7 @@ export const getAllPosts = async (status, pageNumber, pageSize) => {
   }
 }
 
-export const update = async (id, status) => {
+export const updateStatusPost = async (id, status) => {
   try {
     const response = await axios.put(`${api_url}/admins/posts`, {
       id: id,

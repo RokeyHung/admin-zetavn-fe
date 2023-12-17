@@ -25,28 +25,16 @@ export const getOneUser = async id => {
   }
 }
 
-// export const create = async (
-//   id,
-//   email,
-//   username,
-//   phone,
-//   password,
-//   display,
-//   firstName,
-//   lastName,
-//   avatar,
-//   poster,
-//   role,
-//   status,
-//   isAuthorized,
-//   information
-// ) => {
-//   try {
-//     const response = await axios.post(`${api_url}/admins/users`, {})
+export const update = async (userData, updates) => {
+  try {
+    const response = await axios.put(`${api_url}/admins/users`, {
+      ...userData,
+      ...updates
+    })
 
-//     return response.data
-//   } catch (error) {
-//     console.error(error)
-//     throw error
-//   }
-// }
+    return response.data
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}

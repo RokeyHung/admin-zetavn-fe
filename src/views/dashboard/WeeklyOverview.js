@@ -18,12 +18,12 @@ function calculateAverageGrowth(data, fieldName) {
   return averageGrowth
 }
 
-const WeeklyOverview = ({ dataStatistic }) => {
+const WeeklyOverview = ({ dataChart }) => {
   const theme = useTheme()
 
-  const chartData = dataStatistic.map(item => ({
+  const chartData = dataChart.map(item => ({
     x: new Date(item.date[0], item.date[1] - 1, item.date[2]),
-    y: item.totalViewPost || 0
+    y: item.dataDay || 0
   }))
 
   const options = {
@@ -55,14 +55,7 @@ const WeeklyOverview = ({ dataStatistic }) => {
       }
     },
     dataLabels: { enabled: false },
-    colors: [
-      theme.palette.background.default,
-      theme.palette.background.default,
-      theme.palette.background.default,
-      theme.palette.primary.main,
-      theme.palette.background.default,
-      theme.palette.background.default
-    ],
+    colors: [theme.palette[dataChart[0]?.color || 'primary'].main],
     states: {
       hover: {
         filter: { type: 'none' }
@@ -82,10 +75,10 @@ const WeeklyOverview = ({ dataStatistic }) => {
     },
     yaxis: {
       show: true,
-      tickAmount: 4,
+      tickAmount: 10,
       labels: {
         offsetX: -17,
-        formatter: value => `${value > 999 ? `${(value / 1000).toFixed(0)}` : value}k`
+        formatter: value => Math.round(value)
       }
     }
   }
@@ -93,7 +86,7 @@ const WeeklyOverview = ({ dataStatistic }) => {
   return (
     <Card>
       <CardHeader
-        title='Thống kê theo tuần'
+        title='Tổng quan hàng tuần'
         titleTypographyProps={{
           sx: { lineHeight: '2rem !important', letterSpacing: '0.15px !important' }
         }}
@@ -101,16 +94,16 @@ const WeeklyOverview = ({ dataStatistic }) => {
       <CardContent sx={{ '& .apexcharts-xcrosshairs.apexcharts-active': { opacity: 0 } }}>
         <ReactApexcharts
           type='bar'
-          height={205}
+          height={500}
           options={options}
-          series={[{ name: 'Total View Post', data: chartData }]}
+          series={[{ name: dataChart[0]?.title || '', data: chartData }]}
         />
         <Box sx={{ mt: 7, mb: 7, display: 'flex', alignItems: 'center' }}>
-          <Typography variant='body2'>
+          {/* <Typography variant='body2'>
             {`Mức tăng trưởng đã được cải thiện ` +
-              calculateAverageGrowth(dataStatistic, 'newUser') +
+              calculateAverageGrowth(dataChart, 'newUser') +
               `% 😎 so với giai đoạn trước.`}
-          </Typography>
+          </Typography> */}
         </Box>
       </CardContent>
     </Card>

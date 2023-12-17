@@ -135,7 +135,7 @@ const Dashboard = () => {
           <StatisticsCard dataStatistic={dataStatistic} setDataChart={setDataChart} />
         </Grid>
         <Grid item xs={12}>
-          <WeeklyOverview dataChart={dataChart} />
+          <WeeklyOverview dataChart={dataChart} dataStatistic={dataStatistic} />
         </Grid>
         <Grid container item spacing={6}>
           <Grid item xs={6}>

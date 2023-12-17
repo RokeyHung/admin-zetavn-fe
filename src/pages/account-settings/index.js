@@ -25,6 +25,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 
 import { getOneUser } from '../../api/users'
 import { useRouter } from 'next/router'
+import { Button } from '@mui/material'
 
 const Tab = styled(MuiTab)(({ theme }) => ({
   [theme.breakpoints.down('md')]: {
@@ -99,15 +100,6 @@ const AccountSettings = () => {
               </Box>
             }
           />
-          {/* <Tab
-            value='security'
-            label={
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <LockOpenOutline />
-                <TabName>Bảo mật</TabName>
-              </Box>
-            }
-          /> */}
         </TabList>
 
         <TabPanel sx={{ p: 0 }} value='account'>
@@ -116,10 +108,12 @@ const AccountSettings = () => {
         <TabPanel sx={{ p: 0 }} value='info'>
           <TabInfo dataInfo={dataUser} />
         </TabPanel>
-        {/* <TabPanel sx={{ p: 0 }} value='security'>
-          <TabSecurity dataSecurity={dataUser} />
-        </TabPanel> */}
       </TabContext>
+      {!!dataUser && (
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginRight: '1.25rem', marginBottom: '1.25rem' }}>
+          <Button variant='contained'>Tạo người dùng</Button>
+        </div>
+      )}
     </Card>
   )
 }

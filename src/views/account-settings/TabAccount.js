@@ -52,7 +52,6 @@ const TabAccount = ({ dataAccount }) => {
   const [dataUser, setDataUser] = useState(dataAccount)
 
   useEffect(() => {
-    // Cập nhật dataUser khi dataAccount thay đổi
     setDataUser(dataAccount)
   }, [dataAccount])
 
@@ -84,79 +83,60 @@ const TabAccount = ({ dataAccount }) => {
                   />
                 </ButtonStyled>
                 <ResetButtonStyled color='error' variant='outlined' onClick={() => setImgSrc('/images/avatars/1.png')}>
-                  Xóa
+                  Reset
                 </ResetButtonStyled>
                 <Typography variant='body2' sx={{ marginTop: 5 }}>
-                  Chỉ tải ảnh có định dạng PNG hoặc JPEG. Size tối đa 10Mb.
+                  Allowed PNG or JPEG. Max size of 800K.
                 </Typography>
               </Box>
             </Box>
           </Grid>
 
           <Grid item xs={12} sm={6}>
-            <TextField fullWidth label='Username' placeholder='Nhập username' value={dataUser.username} />
+            <TextField fullWidth label='Username' placeholder='' defaultValue={''} value={dataUser.username} required />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <TextField fullWidth label='Tên' placeholder='Nhập tên' value={dataUser.display} />
+            <TextField fullWidth label='Name' placeholder='' defaultValue={''} value={dataUser.display} required />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <TextField fullWidth type='email' label='Email' defaultValue={dataUser.email} value={dataUser.email} />
+            <TextField
+              fullWidth
+              type='email'
+              label='Email'
+              placeholder=''
+              defaultValue={dataUser.email || ''}
+              value={dataUser.email}
+              required
+            />
           </Grid>
           <Grid item xs={12} sm={6}>
             <FormControl fullWidth>
-              <InputLabel>Vai trờ</InputLabel>
-              <Select label='Role' value={dataUser.role}>
-                <MenuItem value='ADMIN'>Admin</MenuItem>
-                <MenuItem value='USER'>User</MenuItem>
+              <InputLabel>Role</InputLabel>
+              <Select label='Role' value={dataUser?.role}>
+                <MenuItem value='USER'>USER</MenuItem>
+                <MenuItem value='ADMIN'>ADMIN</MenuItem>
               </Select>
             </FormControl>
           </Grid>
           <Grid item xs={12} sm={6}>
             <FormControl fullWidth>
-              <InputLabel>Trạng thái</InputLabel>
-              <Select label='Status' value={dataUser.status}>
-                <MenuItem value='ACTIVE'>Active</MenuItem>
-                <MenuItem value='LOCKED'>Locked</MenuItem>
-                <MenuItem value='SUSPENDED'>Suspended</MenuItem>
+              <InputLabel>Status</InputLabel>
+              <Select label='Status' value={dataUser?.status}>
+                <MenuItem value='ACTIVE'>ACTIVE</MenuItem>
+                <MenuItem value='LOCKED'>LOCKED</MenuItem>
+                <MenuItem value='SUSPENDED'>SUSPENDED</MenuItem>
               </Select>
             </FormControl>
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
               fullWidth
-              label='Công ty'
+              label='Company'
+              placeholder='ABC Pvt. Ltd.'
               defaultValue=''
               value={dataUser.information?.work}
             />
           </Grid>
-
-          {/* {openAlert ? (
-            <Grid item xs={12} sx={{ mb: 3 }}>
-              <Alert
-                severity='warning'
-                sx={{ '& a': { fontWeight: 400 } }}
-                action={
-                  <IconButton size='small' color='inherit' aria-label='close' onClick={() => setOpenAlert(false)}>
-                    <Close fontSize='inherit' />
-                  </IconButton>
-                }
-              >
-                <AlertTitle>Your email is not confirmed. Please check your inbox.</AlertTitle>
-                <Link href='/' onClick={e => e.preventDefault()}>
-                  Resend Confirmation
-                </Link>
-              </Alert>
-            </Grid>
-          ) : null} */}
-
-          {/* <Grid item xs={12}>
-            <Button variant='contained' sx={{ marginRight: 3.5 }}>
-              Save Changes
-            </Button>
-            <Button type='reset' variant='outlined' color='secondary'>
-              Reset
-            </Button>
-          </Grid> */}
         </Grid>
       </form>
     </CardContent>

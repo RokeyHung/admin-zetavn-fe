@@ -23,7 +23,7 @@ import DatePicker from 'react-datepicker'
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
 
 const CustomInput = forwardRef((props, ref) => {
-  return <TextField inputRef={ref} label='Ngày sinh' fullWidth {...props} />
+  return <TextField inputRef={ref} label='Birth Date' fullWidth {...props} />
 })
 
 const TabInfo = ({ dataInfo }) => {
@@ -39,9 +39,9 @@ const TabInfo = ({ dataInfo }) => {
             <TextField
               fullWidth
               multiline
-              label='Giới thiệu'
+              label='Bio'
               minRows={2}
-              placeholder='Thông tin giới thiệu'
+              placeholder='Bio'
               defaultValue=''
               value={dataUser.information?.aboutMe}
             />
@@ -63,48 +63,32 @@ const TabInfo = ({ dataInfo }) => {
             </DatePickerWrapper>
           </Grid>
           <Grid item xs={12} sm={6}>
-            <TextField
-              fullWidth
-              type='number'
-              label='Điện thoại'
-              placeholder=''
-              defaultValue=''
-              value={dataUser?.phone}
-            />
+            <TextField fullWidth type='number' label='Phone' placeholder='' defaultValue='' value={dataUser?.phone} />
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
               fullWidth
-              label='Sống ở'
-              placeholder='Nhập nơi sống'
+              label='Live at'
+              placeholder='New York'
               defaultValue=''
               value={dataUser.information?.livesAt}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
             <FormControl>
-              <FormLabel sx={{ fontSize: '0.875rem' }}>Giới tính</FormLabel>
+              <FormLabel id='demo-radio-buttons-group-label'>Gender</FormLabel>
               <RadioGroup
+                aria-labelledby='demo-radio-buttons-group-label'
+                defaultValue={dataUser.information?.genderEnum}
+                name='radio-buttons-group'
                 row
-                defaultValue='MALE'
-                value={dataUser.information?.genderEnum}
-                aria-label='gender'
-                name='account-settings-info-radio'
               >
-                <FormControlLabel value='MALE' label='Nam' control={<Radio />} />
-                <FormControlLabel value='FEMALE' label='Nữ' control={<Radio />} />
-                <FormControlLabel value='OTHER' label='Khác' control={<Radio />} />
+                <FormControlLabel value='MALE' control={<Radio />} label='Nam' />
+                <FormControlLabel value='FEMALE' control={<Radio />} label='Nữ' />
+                <FormControlLabel value='OTHER' control={<Radio />} label='Khác' />
               </RadioGroup>
             </FormControl>
           </Grid>
-          {/* <Grid item xs={12}>
-            <Button variant='contained' sx={{ marginRight: 3.5 }}>
-              Save Changes
-            </Button>
-            <Button type='reset' variant='outlined' color='secondary' onClick={() => setDate(null)}>
-              Reset
-            </Button>
-          </Grid> */}
         </Grid>
       </form>
     </CardContent>

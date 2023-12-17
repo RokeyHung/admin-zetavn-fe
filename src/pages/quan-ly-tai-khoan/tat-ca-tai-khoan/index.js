@@ -10,7 +10,7 @@ const TatCaTaiKhoan = () => {
     <Grid container spacing={6}>
       <Grid item xs={12}>
         <Card>
-          <CardHeader title='Tài khoản' titleTypographyProps={{ variant: 'h6' }} />
+          <CardHeader title='Sticky Header' titleTypographyProps={{ variant: 'h6' }} />
           <TableStickyHeader />
         </Card>
       </Grid>
