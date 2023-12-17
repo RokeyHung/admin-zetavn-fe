@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, Fragment } from 'react'
+import { useState, Fragment, useEffect } from 'react'
 
 // ** Next Import
 import { useRouter } from 'next/router'
@@ -15,13 +15,11 @@ import { styled } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 
 // ** Icons Imports
-import CogOutline from 'mdi-material-ui/CogOutline'
-import CurrencyUsd from 'mdi-material-ui/CurrencyUsd'
-import EmailOutline from 'mdi-material-ui/EmailOutline'
 import LogoutVariant from 'mdi-material-ui/LogoutVariant'
 import AccountOutline from 'mdi-material-ui/AccountOutline'
-import MessageOutline from 'mdi-material-ui/MessageOutline'
-import HelpCircleOutline from 'mdi-material-ui/HelpCircleOutline'
+import { useAuth } from 'src/@core/context/AuthContext'
+import useLocalStorageObject from 'src/@core/localstore/useLocalStorageObject'
+import { http_url } from 'src/utils'
 
 // ** Styled Components
 const BadgeContentSpan = styled('span')(({ theme }) => ({
@@ -33,6 +31,14 @@ const BadgeContentSpan = styled('span')(({ theme }) => ({
 }))
 
 const UserDropdown = () => {
+  const { logout } = useAuth()
+  const [userInfo, setUserInfo] = useState(null)
+
+  useEffect(() => {
+    const storedUserInfo = JSON.parse(localStorage.getItem('userInfo'))
+    setUserInfo(storedUserInfo || null)
+  }, [userInfo])
+
   // ** States
   const [anchorEl, setAnchorEl] = useState(null)
 
@@ -74,10 +80,9 @@ const UserDropdown = () => {
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       >
         <Avatar
-          alt='John Doe'
           onClick={handleDropdownOpen}
           sx={{ width: 40, height: 40 }}
-          src='/images/avatars/1.png'
+          src={!!userInfo ? userInfo?.avatar : '/images/avatars/1.png'}
         />
       </Badge>
       <Menu
@@ -95,10 +100,13 @@ const UserDropdown = () => {
               badgeContent={<BadgeContentSpan />}
               anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
             >
-              <Avatar alt='John Doe' src='/images/avatars/1.png' sx={{ width: '2.5rem', height: '2.5rem' }} />
+              <Avatar
+                src={!!userInfo ? userInfo?.avatar : '/images/avatars/1.png'}
+                sx={{ width: '2.5rem', height: '2.5rem' }}
+              />
             </Badge>
             <Box sx={{ display: 'flex', marginLeft: 3, alignItems: 'flex-start', flexDirection: 'column' }}>
-              <Typography sx={{ fontWeight: 600 }}>John Doe</Typography>
+              <Typography sx={{ fontWeight: 600 }}>{!!userInfo ? userInfo?.display : 'John Doe'}</Typography>
               <Typography variant='body2' sx={{ fontSize: '0.8rem', color: 'text.disabled' }}>
                 Admin
               </Typography>
@@ -106,7 +114,20 @@ const UserDropdown = () => {
           </Box>
         </Box>
         <Divider sx={{ mt: 0, mb: 1 }} />
-        <MenuItem sx={{ py: 2 }} onClick={() => handleDropdownClose('/pages/login')}>
+        <MenuItem
+          sx={{ py: 2 }}
+          onClick={() => {
+            if (!!userInfo?.id) {
+              router.push(`${http_url}/account-settings/${userInfo.id}`)
+            } else {
+              router.push(`${http_url}/account-settings`)
+            }
+          }}
+        >
+          <AccountOutline sx={{ marginRight: 2, fontSize: '1.375rem', color: 'text.secondary' }} />
+          Profile
+        </MenuItem>
+        <MenuItem sx={{ py: 2 }} onClick={() => logout()}>
           <LogoutVariant sx={{ marginRight: 2, fontSize: '1.375rem', color: 'text.secondary' }} />
           Logout
         </MenuItem>
