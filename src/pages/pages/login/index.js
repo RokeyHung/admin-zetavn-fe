@@ -44,6 +44,14 @@ const Card = styled(MuiCard)(({ theme }) => ({
   [theme.breakpoints.up('sm')]: { width: '28rem' }
 }))
 
+// ** Validation Import
+import * as yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { useForm } from 'react-hook-form'
+import Input from 'src/components/input/Input'
+import InputPassword from 'src/components/input/InputPassword'
+import { useAuth } from 'src/context/auth-context'
+
 const LinkStyled = styled('a')(({ theme }) => ({
   fontSize: '0.875rem',
   textDecoration: 'none',
@@ -57,6 +65,16 @@ const FormControlLabel = styled(MuiFormControlLabel)(({ theme }) => ({
   }
 }))
 
+const defaultValues = {
+  username: '',
+  password: ''
+}
+
+const schema = yup.object({
+  username: yup.string().required('Vui lòng nhập tên tài khoản').email('Vui lòng nhập đúng định dạng email'),
+  password: yup.string().required('Vui lòng nhập mật khẩu')
+})
+
 const LoginPage = () => {
   // ** State
   const [values, setValues] = useState({
@@ -67,6 +85,18 @@ const LoginPage = () => {
   // ** Hook
   const theme = useTheme()
   const router = useRouter()
+  const { signIn } = useAuth()
+
+  const { control, handleSubmit, reset } = useForm({
+    defaultValues: defaultValues,
+    resolver: yupResolver(schema),
+    mode: 'all'
+  })
+
+  const handleSignIn = async values => {
+    const response = await signIn(values)
+    console.log('🚀 ~ file: index.js:98 ~ handleSignIn ~ response:', response)
+  }
 
   const handleChange = prop => event => {
     setValues({ ...values, [prop]: event.target.value })
@@ -202,37 +232,16 @@ const LoginPage = () => {
             </Typography>
             <Typography variant='body2'>Vui lòng đăng nhập để sử dụng</Typography>
           </Box>
-          <form noValidate autoComplete='off' onSubmit={e => e.preventDefault()}>
-            <TextField autoFocus fullWidth id='email' label='Email' sx={{ marginBottom: 4 }} />
-            <FormControl fullWidth>
-              <InputLabel htmlFor='auth-login-password'>Mật khẩu</InputLabel>
-              <OutlinedInput
-                label='Password'
-                value={values.password}
-                id='auth-login-password'
-                onChange={handleChange('password')}
-                type={values.showPassword ? 'text' : 'password'}
-                endAdornment={
-                  <InputAdornment position='end'>
-                    <IconButton
-                      edge='end'
-                      onClick={handleClickShowPassword}
-                      onMouseDown={handleMouseDownPassword}
-                      aria-label='toggle password visibility'
-                    >
-                      {values.showPassword ? <EyeOutline /> : <EyeOffOutline />}
-                    </IconButton>
-                  </InputAdornment>
-                }
-              />
-            </FormControl>
-            <Button
-              fullWidth
-              size='large'
-              variant='contained'
-              sx={{ marginBottom: 7, marginTop: 6 }}
-              onClick={() => router.push('/')}
-            >
+          <form autoComplete='off' onSubmit={handleSubmit(handleSignIn)}>
+            <Input id='username' name='username' type='email' label='Email' control={control}></Input>
+            <InputPassword
+              label='Mật khẩu'
+              name='password'
+              id='password'
+              control={control}
+              inputLabel='Mật khẩu'
+            ></InputPassword>
+            <Button type='submit' fullWidth size='large' variant='contained' sx={{ marginBottom: 7, marginTop: 6 }}>
               Đăng nhập
             </Button>
           </form>

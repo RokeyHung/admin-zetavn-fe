@@ -31,42 +31,44 @@ const DashboardTable = ({ dataRow }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {dataRow.map(row => (
-              <TableRow hover key={row.id} sx={{ '&:last-of-type td, &:last-of-type th': { border: 0 } }}>
-                <TableCell sx={{ py: theme => `${theme.spacing(0.5)} !important`, maxWidth: '150px !important' }}>
-                  <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                    <Typography sx={[{ fontWeight: 500, fontSize: '1rem !important' }, textStyle]}>
-                      {row?.display || ''}
+            {dataRow &&
+              dataRow?.length &&
+              dataRow.map(row => (
+                <TableRow hover key={row.id} sx={{ '&:last-of-type td, &:last-of-type th': { border: 0 } }}>
+                  <TableCell sx={{ py: theme => `${theme.spacing(0.5)} !important`, maxWidth: '150px !important' }}>
+                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                      <Typography sx={[{ fontWeight: 500, fontSize: '1rem !important' }, textStyle]}>
+                        {row?.display || ''}
+                      </Typography>
+                      <Typography variant='caption' sx={textStyle}>
+                        {row?.username || ''}
+                      </Typography>
+                    </Box>
+                  </TableCell>
+                  <TableCell>
+                    <Typography sx={{ fontWeight: 500, fontSize: '1rem !important' }}>
+                      {formatNumber(row?.information?.totalPosts)}
                     </Typography>
-                    <Typography variant='caption' sx={textStyle}>
-                      {row?.username || ''}
+                  </TableCell>
+                  <TableCell>
+                    <Typography sx={{ fontWeight: 500, fontSize: '1rem !important' }}>
+                      {formatNumber(row?.information?.followers)}
                     </Typography>
-                  </Box>
-                </TableCell>
-                <TableCell>
-                  <Typography sx={{ fontWeight: 500, fontSize: '1rem !important' }}>
-                    {formatNumber(row?.information?.totalPosts)}
-                  </Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography sx={{ fontWeight: 500, fontSize: '1rem !important' }}>
-                    {formatNumber(row?.information?.followers)}
-                  </Typography>
-                </TableCell>
-                <TableCell>
-                  <Chip
-                    label={row?.status || ''}
-                    color={statusObj[row?.status].color}
-                    sx={{
-                      height: 24,
-                      fontSize: '0.75rem',
-                      textTransform: 'capitalize',
-                      '& .MuiChip-label': { fontWeight: 500 }
-                    }}
-                  />
-                </TableCell>
-              </TableRow>
-            ))}
+                  </TableCell>
+                  <TableCell>
+                    <Chip
+                      label={row?.status || ''}
+                      color={statusObj[row?.status].color}
+                      sx={{
+                        height: 24,
+                        fontSize: '0.75rem',
+                        textTransform: 'capitalize',
+                        '& .MuiChip-label': { fontWeight: 500 }
+                      }}
+                    />
+                  </TableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </TableContainer>

@@ -37,11 +37,22 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 
 // ** Demo Imports
 import FooterIllustrationsV1 from 'src/views/pages/auth/FooterIllustration'
+import { FormLabel, Radio } from '@mui/material'
 
 // ** Styled Components
 const Card = styled(MuiCard)(({ theme }) => ({
   [theme.breakpoints.up('sm')]: { width: '28rem' }
 }))
+
+// **  Validation Imports
+import * as yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { useForm, SubmitHandler } from 'react-hook-form'
+import { Gender } from 'src/types/constant'
+import Input from 'src/components/input/Input'
+import InputPassword from 'src/components/input/InputPassword'
+import { MyRadioGroup } from 'src/components/radio'
+import InputTerms from 'src/components/input/InputTerms'
 
 const LinkStyled = styled('a')(({ theme }) => ({
   fontSize: '0.875rem',
@@ -58,26 +69,45 @@ const FormControlLabel = styled(MuiFormControlLabel)(({ theme }) => ({
   }
 }))
 
-const RegisterPage = () => {
-  // ** States
-  const [values, setValues] = useState({
-    password: '',
-    showPassword: false
-  })
+const defaultValues = {
+  firstName: '',
+  lastName: '',
+  email: '',
+  password: '',
+  confirmPassword: '',
+  gender: Gender.MALE,
+  birthday: new Date(),
+  terms: false
+}
 
+const schema = yup.object({
+  firstName: yup.string().required('Vui lòng nhập họ'),
+  lastName: yup.string().required('Vui lòng nhập tên'),
+  email: yup.string().required('Vui lòng nhập email').email('Vui lòng nhập đúng định dạng email'),
+  password: yup.string().required('Vui lòng nhập mật khẩu').min(6, 'Mật khẩu phải có ít nhất 6 ký tự'),
+  confirmPassword: yup
+    .string()
+    .required('Vui lòng xác nhận lại mật khẩu')
+    .oneOf([yup.ref('password'), ''], 'Mật khẩu xác nhận không khớp'),
+  gender: yup.string().oneOf(Gender).default(Gender[0]),
+  birthday: yup.date().required('Vui lòng chọn ngày sinh'),
+  terms: yup.boolean().oneOf([true], 'Vui lòng đồng ý với chính sách bảo mật và các điều khoản khác').required()
+})
+
+const RegisterPage = () => {
   // ** Hook
   const theme = useTheme()
 
-  const handleChange = prop => event => {
-    setValues({ ...values, [prop]: event.target.value })
-  }
+  const { control, handleSubmit, reset } = useForm({
+    defaultValues: defaultValues,
+    resolver: yupResolver(schema),
+    mode: 'all'
+  })
 
-  const handleClickShowPassword = () => {
-    setValues({ ...values, showPassword: !values.showPassword })
-  }
-
-  const handleMouseDownPassword = event => {
-    event.preventDefault()
+  const handleSignUpAdminAccount = async values => {
+    console.log('🚀 ~ file: index.js:121 ~ handleSignUpAdminAccount ~ values:', values)
+    const { firstName, lastName, email } = values
+    console.log('🚀 ~ file: index.js:122 ~ handleSignUpAdminAccount ~ firstName:', firstName)
   }
 
   return (
@@ -159,60 +189,56 @@ const RegisterPage = () => {
           </Box>
           <Box sx={{ mb: 6 }}>
             <Typography variant='h5' sx={{ fontWeight: 600, marginBottom: 1.5 }}>
-              Adventure starts here 🚀
+              Cuộc phiêu lưu bắt đầu từ đây 🚀
             </Typography>
-            <Typography variant='body2'>Make your app management easy and fun!</Typography>
+            <Typography variant='body2'>Làm cho việc quản lý ứng dụng của bạn trở nên dễ dàng và thú vị!</Typography>
           </Box>
-          <form noValidate autoComplete='off' onSubmit={e => e.preventDefault()}>
-            <TextField autoFocus fullWidth id='username' label='Username' sx={{ marginBottom: 4 }} />
-            <TextField fullWidth type='email' label='Email' sx={{ marginBottom: 4 }} />
-            <FormControl fullWidth>
-              <InputLabel htmlFor='auth-register-password'>Password</InputLabel>
-              <OutlinedInput
-                label='Password'
-                value={values.password}
-                id='auth-register-password'
-                onChange={handleChange('password')}
-                type={values.showPassword ? 'text' : 'password'}
-                endAdornment={
-                  <InputAdornment position='end'>
-                    <IconButton
-                      edge='end'
-                      onClick={handleClickShowPassword}
-                      onMouseDown={handleMouseDownPassword}
-                      aria-label='toggle password visibility'
-                    >
-                      {values.showPassword ? <EyeOutline fontSize='small' /> : <EyeOffOutline fontSize='small' />}
-                    </IconButton>
-                  </InputAdornment>
-                }
-              />
-            </FormControl>
-            <FormControlLabel
-              control={<Checkbox />}
-              label={
-                <Fragment>
-                  <span>I agree to </span>
-                  <Link href='/' passHref>
-                    <LinkStyled onClick={e => e.preventDefault()}>privacy policy & terms</LinkStyled>
-                  </Link>
-                </Fragment>
-              }
-            />
+          <form autoComplete='off' onSubmit={handleSubmit(handleSignUpAdminAccount)}>
+            <Input name='firstName' id='firstName' label='Họ' control={control}></Input>
+            <Input name='lastName' id='lastName' label='Tên' control={control}></Input>
+            <Input id='email' name='email' type='email' label='Email' control={control}></Input>
+            <InputPassword
+              label='Mật khẩu'
+              name='password'
+              id='password'
+              control={control}
+              inputLabel='Mật khẩu'
+            ></InputPassword>
+            <InputPassword
+              label='Xác nhận mật khẩu'
+              name='confirmPassword'
+              id='confirmPassword'
+              control={control}
+              inputLabel='Xác nhận mật khẩu'
+            ></InputPassword>
+            <MyRadioGroup label='Giới tính' id='gender' name='gender' control={control}>
+              <FormControlLabel value='female' control={<Radio />} label='Nữ' sx={{ m: 0 }} />
+              <FormControlLabel value='male' control={<Radio />} label='Nam' sx={{ m: 0 }} />
+            </MyRadioGroup>
+            {/* <InputDate id='birthday' name='birthday' label='Ngày sinh' control={control} /> */}
+
+            <InputTerms id='terms' name='terms' control={control}>
+              <Fragment>
+                <span>Tôi đồng ý </span>
+                <Link href='/' passHref>
+                  <LinkStyled onClick={e => e.preventDefault()}>chính sách và điều khoản bảo mật</LinkStyled>
+                </Link>
+              </Fragment>
+            </InputTerms>
             <Button fullWidth size='large' type='submit' variant='contained' sx={{ marginBottom: 7 }}>
-              Sign up
+              Đăng ký
             </Button>
             <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
               <Typography variant='body2' sx={{ marginRight: 2 }}>
-                Already have an account?
+                Đã có tài khoản?
               </Typography>
               <Typography variant='body2'>
                 <Link passHref href='/pages/login'>
-                  <LinkStyled>Sign in instead</LinkStyled>
+                  <LinkStyled>Đăng nhập</LinkStyled>
                 </Link>
               </Typography>
             </Box>
-            <Divider sx={{ my: 5 }}>or</Divider>
+            <Divider sx={{ my: 5 }}>Hoặc</Divider>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Link href='/' passHref>
                 <IconButton component='a' onClick={e => e.preventDefault()}>

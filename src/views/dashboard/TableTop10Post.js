@@ -24,33 +24,35 @@ const DashboardTable = ({ dataRow }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {dataRow.map(row => (
-              <TableRow hover key={row.id} sx={{ '&:last-of-type td, &:last-of-type th': { border: 0 } }}>
-                <TableCell sx={{ py: theme => `${theme.spacing(0.5)} !important`, maxWidth: '150px !important' }}>
-                  <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                    <Typography sx={[{ fontWeight: 500, fontSize: '1rem !important' }, textStyle]}>
-                      {row?.user?.display || ''}
+            {dataRow &&
+              dataRow?.length > 0 &&
+              dataRow.map(row => (
+                <TableRow hover key={row.id} sx={{ '&:last-of-type td, &:last-of-type th': { border: 0 } }}>
+                  <TableCell sx={{ py: theme => `${theme.spacing(0.5)} !important`, maxWidth: '150px !important' }}>
+                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                      <Typography sx={[{ fontWeight: 500, fontSize: '1rem !important' }, textStyle]}>
+                        {row?.user?.display || ''}
+                      </Typography>
+                      <Typography variant='caption' sx={textStyle}>
+                        {row?.user?.username || ''}
+                      </Typography>
+                    </Box>
+                  </TableCell>
+                  <TableCell>
+                    <Typography sx={{ fontWeight: 500, fontSize: '1rem !important' }}>
+                      {formatNumber(row?.countLike)}
                     </Typography>
-                    <Typography variant='caption' sx={textStyle}>
-                      {row?.user?.username || ''}
+                  </TableCell>
+                  <TableCell>
+                    <Typography sx={{ fontWeight: 500, fontSize: '1rem !important' }}>
+                      {formatNumber(row?.countComment)}
                     </Typography>
-                  </Box>
-                </TableCell>
-                <TableCell>
-                  <Typography sx={{ fontWeight: 500, fontSize: '1rem !important' }}>
-                    {formatNumber(row?.countLike)}
-                  </Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography sx={{ fontWeight: 500, fontSize: '1rem !important' }}>
-                    {formatNumber(row?.countComment)}
-                  </Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography sx={{ fontWeight: 500, fontSize: '1rem !important' }}>{row?.createdAt}</Typography>
-                </TableCell>
-              </TableRow>
-            ))}
+                  </TableCell>
+                  <TableCell>
+                    <Typography sx={{ fontWeight: 500, fontSize: '1rem !important' }}>{row?.createdAt}</Typography>
+                  </TableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </TableContainer>

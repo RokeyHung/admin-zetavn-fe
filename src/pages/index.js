@@ -44,13 +44,19 @@ const Dashboard = () => {
           day: '2-digit'
         })
       )
-      const statisticsPost = await statisticsPostPopular()
-      const statisticsUser = await statisticsUserPopular()
+
+      // const statisticsPost = await statisticsPostPopular()
+      // const statisticsUser = await statisticsUserPopular()
+
+      const statisticsPost = []
+      const statisticsUser = []
 
       const { code, message, data } = getStatistic
       setDataStatistic(data.data)
       setDataChart(
-        data.data.map(item => ({ date: item.date, dataDay: item.newPost, title: 'Bài viết mới', color: 'primary' }))
+        data?.data &&
+          data?.data?.length > 0 &&
+          data.data.map(item => ({ date: item.date, dataDay: item.newPost, title: 'Bài viết mới', color: 'primary' }))
       )
       setDataUser(statisticsUser.data)
       setDataPost(statisticsPost.data)

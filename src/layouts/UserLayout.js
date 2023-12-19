@@ -14,6 +14,7 @@ import VerticalAppBarContent from './components/vertical/AppBarContent'
 
 // ** Hook Import
 import { useSettings } from 'src/@core/hooks/useSettings'
+import { AuthProvider } from 'src/context/auth-context'
 
 const UserLayout = ({ children }) => {
   // ** Hooks
