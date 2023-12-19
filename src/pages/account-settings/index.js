@@ -23,7 +23,7 @@ import TabSecurity from 'src/views/account-settings/TabSecurity'
 // ** Third Party Styles Imports
 import 'react-datepicker/dist/react-datepicker.css'
 
-import { getOneUser } from '../../api/users'
+import { getOneUser, create } from '../../api/users'
 import { useRouter } from 'next/router'
 import { Button } from '@mui/material'
 
@@ -74,6 +74,23 @@ const AccountSettings = () => {
     getData()
   }, [])
 
+  const handleCreate = async () => {
+    try {
+      const response = await create(dataUser)
+      const { code, message, data } = response
+      if (code == 200) {
+        alert(message)
+        router.push('/quan-ly-tai-khoan/tat-ca-tai-khoan/')
+      } else {
+        alert(message)
+      }
+    } catch (error) {
+      alert(error.message)
+
+      return
+    }
+  }
+
   return (
     <Card>
       <TabContext value={value}>
@@ -103,15 +120,17 @@ const AccountSettings = () => {
         </TabList>
 
         <TabPanel sx={{ p: 0 }} value='account'>
-          <TabAccount dataAccount={dataUser} />
+          <TabAccount dataAccount={dataUser} setDataAccount={setDataUser} />
         </TabPanel>
         <TabPanel sx={{ p: 0 }} value='info'>
-          <TabInfo dataInfo={dataUser} />
+          <TabInfo dataInfo={dataUser} setDataAccount={setDataUser} />
         </TabPanel>
       </TabContext>
       {!!dataUser && (
         <div style={{ display: 'flex', justifyContent: 'flex-end', marginRight: '1.25rem', marginBottom: '1.25rem' }}>
-          <Button variant='contained'>Tạo người dùng</Button>
+          <Button variant='contained' onClick={handleCreate}>
+            Tạo người dùng
+          </Button>
         </div>
       )}
     </Card>

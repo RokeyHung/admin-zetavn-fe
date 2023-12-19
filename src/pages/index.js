@@ -62,7 +62,13 @@ const Dashboard = () => {
   }
 
   useEffect(() => {
-    getData()
+    let isMounted = true
+    if (isMounted) {
+      getData()
+    }
+    return () => {
+      isMounted = false
+    }
   }, [])
 
   const handleSubmitDate = async () => {
@@ -102,7 +108,6 @@ const Dashboard = () => {
                     customInput={<CustomInputStart />}
                     onChange={date => {
                       setDateStart(date)
-                      console.log(date)
                     }}
                   />
                 </DatePickerWrapper>
@@ -118,7 +123,6 @@ const Dashboard = () => {
                     customInput={<CustomInputEnd />}
                     onChange={date => {
                       setDateEnd(date)
-                      console.log(date)
                     }}
                   />
                 </DatePickerWrapper>

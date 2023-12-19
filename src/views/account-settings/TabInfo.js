@@ -26,10 +26,28 @@ const CustomInput = forwardRef((props, ref) => {
   return <TextField inputRef={ref} label='Birth Date' fullWidth {...props} />
 })
 
-const TabInfo = ({ dataInfo }) => {
+const TabInfo = ({ dataInfo, setDataAccount }) => {
   // ** State
   const [date, setDate] = useState(null)
-  const [dataUser, setDataUser] = useState(dataInfo)
+
+  const handleFieldChange = (field, value) => {
+    const fieldKeys = field.split('.')
+    const newDataUser = { ...dataInfo }
+
+    let currentObject = newDataUser
+    for (let i = 0; i < fieldKeys.length; i++) {
+      const key = fieldKeys[i]
+
+      if (i === fieldKeys.length - 1) {
+        currentObject[key] = value
+      } else {
+        currentObject[key] = currentObject[key] || {}
+        currentObject = currentObject[key]
+      }
+    }
+
+    setDataAccount(newDataUser)
+  }
 
   return (
     <CardContent>
@@ -43,7 +61,8 @@ const TabInfo = ({ dataInfo }) => {
               minRows={2}
               placeholder='Bio'
               defaultValue=''
-              value={dataUser.information?.aboutMe}
+              value={dataInfo.information?.aboutMe}
+              onChange={event => handleFieldChange('information.aboutMe', event.target.value)}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -57,13 +76,22 @@ const TabInfo = ({ dataInfo }) => {
                 customInput={<CustomInput />}
                 onChange={date => {
                   setDate(date)
-                  console.log(date)
+                  handleFieldChange('information.birthday', date)
                 }}
+                value={dataInfo.information?.birthday || date}
               />
             </DatePickerWrapper>
           </Grid>
           <Grid item xs={12} sm={6}>
-            <TextField fullWidth type='number' label='Phone' placeholder='' defaultValue='' value={dataUser?.phone} />
+            <TextField
+              fullWidth
+              type='number'
+              label='Phone'
+              placeholder=''
+              defaultValue=''
+              value={dataInfo?.phone}
+              onChange={event => handleFieldChange('phone', event.target.value)}
+            />
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
@@ -71,7 +99,8 @@ const TabInfo = ({ dataInfo }) => {
               label='Live at'
               placeholder='New York'
               defaultValue=''
-              value={dataUser.information?.livesAt}
+              value={dataInfo.information?.livesAt}
+              onChange={event => handleFieldChange('information.livesAt', event.target.value)}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -79,9 +108,10 @@ const TabInfo = ({ dataInfo }) => {
               <FormLabel id='demo-radio-buttons-group-label'>Gender</FormLabel>
               <RadioGroup
                 aria-labelledby='demo-radio-buttons-group-label'
-                defaultValue={dataUser.information?.genderEnum}
+                defaultValue={dataInfo.information?.genderEnum}
                 name='radio-buttons-group'
                 row
+                onChange={event => handleFieldChange('information.genderEnum', event.target.value)}
               >
                 <FormControlLabel value='MALE' control={<Radio />} label='Nam' />
                 <FormControlLabel value='FEMALE' control={<Radio />} label='Nữ' />

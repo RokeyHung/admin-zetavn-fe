@@ -3,7 +3,7 @@ import { api_url } from '../utils/index'
 
 export const login = async (username, password) => {
   try {
-    const response = await axios.post(`${api_url}/auth/login`, {
+    const response = await axios.post(`${api_url}/admins/auth/login`, {
       username: username,
       password: password
     })

@@ -45,11 +45,28 @@ const ResetButtonStyled = styled(Button)(({ theme }) => ({
   }
 }))
 
-const TabAccount = ({ dataAccount }) => {
-  // ** State
-  const [openAlert, setOpenAlert] = useState(true)
+const TabAccount = ({ dataAccount, setDataAccount }) => {
   const [imgSrc, setImgSrc] = useState('/images/avatars/1.png')
   const [dataUser, setDataUser] = useState(dataAccount)
+
+  const handleFieldChange = (field, value) => {
+    const fieldKeys = field.split('.')
+    const newDataUser = { ...dataUser }
+
+    let currentObject = newDataUser
+    for (let i = 0; i < fieldKeys.length; i++) {
+      const key = fieldKeys[i]
+
+      if (i === fieldKeys.length - 1) {
+        currentObject[key] = value
+      } else {
+        currentObject[key] = currentObject[key] || {}
+        currentObject = currentObject[key]
+      }
+    }
+
+    setDataAccount(newDataUser)
+  }
 
   useEffect(() => {
     setDataUser(dataAccount)
@@ -58,9 +75,20 @@ const TabAccount = ({ dataAccount }) => {
   const onChange = file => {
     const reader = new FileReader()
     const { files } = file.target
+
     if (files && files.length !== 0) {
-      reader.onload = () => setImgSrc(reader.result)
-      reader.readAsDataURL(files[0])
+      const selectedFile = files[0]
+
+      reader.onload = () => {
+        setImgSrc(reader.result)
+      }
+
+      reader.readAsDataURL(selectedFile)
+
+      setDataAccount(prevDataAccount => ({
+        ...prevDataAccount,
+        avatar: selectedFile
+      }))
     }
   }
 
@@ -91,12 +119,40 @@ const TabAccount = ({ dataAccount }) => {
               </Box>
             </Box>
           </Grid>
-
           <Grid item xs={12} sm={6}>
-            <TextField fullWidth label='Username' placeholder='' defaultValue={''} value={dataUser.username} required />
+            <TextField
+              fullWidth
+              label='Username'
+              placeholder=''
+              defaultValue={''}
+              value={dataUser.username}
+              onChange={event => handleFieldChange('username', event.target.value)}
+              required
+            />
           </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField fullWidth label='Name' placeholder='' defaultValue={''} value={dataUser.display} required />
+          <Grid item xs={12} sm={6} sx={{ display: 'flex', gap: 6 }}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label='First Name'
+                placeholder=''
+                defaultValue=''
+                value={dataUser.firstName}
+                onChange={event => handleFieldChange('firstName', event.target.value)}
+                required
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label='Last Name'
+                placeholder=''
+                defaultValue=''
+                value={dataUser.lastName}
+                onChange={event => handleFieldChange('lastName', event.target.value)}
+                required
+              />
+            </Grid>
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
@@ -106,13 +162,20 @@ const TabAccount = ({ dataAccount }) => {
               placeholder=''
               defaultValue={dataUser.email || ''}
               value={dataUser.email}
+              onChange={event => handleFieldChange('email', event.target.value)}
               required
             />
           </Grid>
           <Grid item xs={12} sm={6}>
             <FormControl fullWidth>
               <InputLabel>Role</InputLabel>
-              <Select label='Role' value={dataUser?.role}>
+              <Select
+                label='Role'
+                value={dataUser?.role || ''}
+                onChange={event => handleFieldChange('role', event.target.value)}
+                required
+                defaultValue='USER'
+              >
                 <MenuItem value='USER'>USER</MenuItem>
                 <MenuItem value='ADMIN'>ADMIN</MenuItem>
               </Select>
@@ -121,7 +184,13 @@ const TabAccount = ({ dataAccount }) => {
           <Grid item xs={12} sm={6}>
             <FormControl fullWidth>
               <InputLabel>Status</InputLabel>
-              <Select label='Status' value={dataUser?.status}>
+              <Select
+                label='Status'
+                value={dataUser?.status || ''}
+                onChange={event => handleFieldChange('status', event.target.value)}
+                required
+                defaultValue='ACTIVE'
+              >
                 <MenuItem value='ACTIVE'>ACTIVE</MenuItem>
                 <MenuItem value='LOCKED'>LOCKED</MenuItem>
                 <MenuItem value='SUSPENDED'>SUSPENDED</MenuItem>
@@ -134,8 +203,23 @@ const TabAccount = ({ dataAccount }) => {
               label='Company'
               placeholder='ABC Pvt. Ltd.'
               defaultValue=''
-              value={dataUser.information?.work}
+              value={dataUser.information?.worksAt}
+              onChange={event => handleFieldChange('information.worksAt', event.target.value)}
             />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            {!dataUser.id && (
+              <TextField
+                fullWidth
+                label='Password'
+                placeholder=''
+                defaultValue=''
+                value={dataUser.password}
+                onChange={event => handleFieldChange('password', event.target.value)}
+                required
+                type='password'
+              />
+            )}
           </Grid>
         </Grid>
       </form>

@@ -10,7 +10,7 @@ import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TablePagination from '@mui/material/TablePagination'
-import { getAllUser, getOneUser, update } from '../../../api/users'
+import { getAllUser, getOneUser, lockUserAccount, update } from '../../../api/users'
 import { FaEye } from 'react-icons/fa'
 import { Box, Button, MenuItem, Select, Typography } from '@mui/material'
 import { useRouter } from 'next/router'
@@ -36,6 +36,8 @@ const TableStickyHeader = () => {
   const router = useRouter()
   const [rows, setRows] = useState([])
   const [page, setPage] = useState(0)
+  const [totalPages, setTotalPages] = useState(0)
+  const [totalPosts, setTotalPosts] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(10)
   const [openModalStatus, setOpenModalStatus] = useState(false)
   const [dataUser, setDateUser] = useState({})
@@ -63,7 +65,6 @@ const TableStickyHeader = () => {
                 const response = await getOneUser(userId)
                 const { code, message, data } = response
                 if (code == 200) {
-                  console.log(data)
                   setDateUser(data)
                 }
                 setOpenModalStatus(true)
@@ -92,8 +93,7 @@ const TableStickyHeader = () => {
 
     const handleUpdate = async () => {
       if (!!dataUser?.id) {
-        const res = await update(dataUser, { status, role })
-        console.log(res)
+        const res = await lockUserAccount(dataUser.id, status, role)
         const { code, message, data } = res
         if (code === 200) {
           let user = rows.find(obj => obj.id === dataUser.id)
@@ -160,6 +160,8 @@ const TableStickyHeader = () => {
       const response = await getAllUser(status, page, rowsPerPage)
       const { code, message, data } = response
       if (code == 200) {
+        setTotalPages(data.totalPages)
+        setTotalPosts(data.totalElements)
         const dataUser = data.data.map((item, index) =>
           createData(item.id, item.display, item.username, item.role, item.status, item.createdAt, editButtons(item.id))
         )
@@ -211,7 +213,7 @@ const TableStickyHeader = () => {
       <TablePagination
         rowsPerPageOptions={[10, 25, 100]}
         component='div'
-        count={rows.length}
+        count={totalPosts}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}

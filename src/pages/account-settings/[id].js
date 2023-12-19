@@ -99,15 +99,6 @@ const AccountSettings = () => {
               </Box>
             }
           />
-          {/* <Tab
-            value='security'
-            label={
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <LockOpenOutline />
-                <TabName>Bảo mật</TabName>
-              </Box>
-            }
-          /> */}
         </TabList>
 
         <TabPanel sx={{ p: 0 }} value='account'>
@@ -116,9 +107,6 @@ const AccountSettings = () => {
         <TabPanel sx={{ p: 0 }} value='info'>
           <TabInfo dataInfo={dataUser} />
         </TabPanel>
-        {/* <TabPanel sx={{ p: 0 }} value='security'>
-          <TabSecurity dataSecurity={dataUser} />
-        </TabPanel> */}
       </TabContext>
     </Card>
   )

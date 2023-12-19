@@ -36,8 +36,13 @@ const UserDropdown = () => {
 
   useEffect(() => {
     const storedUserInfo = JSON.parse(localStorage.getItem('userInfo'))
-    setUserInfo(storedUserInfo || null)
-  }, [userInfo])
+    setUserInfo(prevUserInfo => {
+      if (JSON.stringify(prevUserInfo) !== JSON.stringify(storedUserInfo)) {
+        return storedUserInfo || {}
+      }
+      return prevUserInfo
+    })
+  }, [])
 
   // ** States
   const [anchorEl, setAnchorEl] = useState(null)

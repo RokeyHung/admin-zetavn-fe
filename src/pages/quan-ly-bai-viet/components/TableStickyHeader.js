@@ -1,8 +1,6 @@
 // ** React Imports
 import { useState, useEffect } from 'react'
 import MenuItem from '@mui/material/MenuItem'
-import InputLabel from '@mui/material/InputLabel'
-import FormControl from '@mui/material/FormControl'
 import Select from '@mui/material/Select'
 // ** MUI Imports
 import Paper from '@mui/material/Paper'
@@ -38,7 +36,9 @@ const TableStickyHeader = () => {
   // ** States
   const [rows, setRows] = useState([])
   const [page, setPage] = useState(0)
-  const [rowsPerPage, setRowsPerPage] = useState(10)
+  const [totalPages, setTotalPages] = useState(0)
+  const [totalPosts, setTotalPosts] = useState(0)
+  const [rowsPerPage, setRowsPerPage] = useState(5)
   const [status, setStatus] = useState('')
   const [openModal, setOpenModal] = useState(false)
   const [openModalStatus, setOpenModalStatus] = useState(false)
@@ -50,14 +50,12 @@ const TableStickyHeader = () => {
 
   const handleChangeRowsPerPage = event => {
     setRowsPerPage(+event.target.value)
-    setPage(0)
   }
 
   const handleShowPostId = async postId => {
     try {
       const response = await getOnePost(postId)
       const { code, message, data } = response
-      console.log(data)
       setDataPost(data)
     } catch (error) {
       alert(error.message)
@@ -159,6 +157,8 @@ const TableStickyHeader = () => {
       const response = await getAllPosts(status, page, rowsPerPage)
       const { code, message, data } = response
       if (code == 200) {
+        setTotalPages(data.totalPages)
+        setTotalPosts(data.totalElements)
         const dataPost = data.data.map((item, index) =>
           createData(
             item.id,
@@ -181,7 +181,7 @@ const TableStickyHeader = () => {
 
   useEffect(() => {
     getData()
-  }, [rowsPerPage])
+  }, [rowsPerPage, page])
 
   return (
     <Paper sx={{ width: '100%', overflow: 'hidden' }}>
@@ -216,9 +216,9 @@ const TableStickyHeader = () => {
         </Table>
       </TableContainer>
       <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
+        rowsPerPageOptions={[5, 25, 100]}
         component='div'
-        count={rows.length}
+        count={totalPosts}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}

@@ -12,7 +12,6 @@ export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
 
   const logout = () => {
-    console.log('logout function')
     router.push('/login')
     removeCookie('token')
     removeObject()
