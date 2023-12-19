@@ -13,6 +13,7 @@ const XemBaiViet = () => {
           <CardHeader title='Quản lý bài viết' titleTypographyProps={{ variant: 'h6' }} />
           <TableStickyHeader />
         </Card>
+        <div style={{ height: 100 }} />
       </Grid>
     </Grid>
   )

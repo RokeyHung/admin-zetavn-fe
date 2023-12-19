@@ -36,17 +36,18 @@ const TableStickyHeader = () => {
   const router = useRouter()
   const [rows, setRows] = useState([])
   const [page, setPage] = useState(0)
-  const [totalPages, setTotalPages] = useState(0)
   const [totalPosts, setTotalPosts] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(10)
   const [openModalStatus, setOpenModalStatus] = useState(false)
   const [dataUser, setDateUser] = useState({})
+  const [visitedPages, setVisitedPages] = useState([])
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
   }
 
   const handleChangeRowsPerPage = event => {
+    setVisitedPages([page])
     setRowsPerPage(+event.target.value)
     setPage(0)
   }
@@ -155,28 +156,45 @@ const TableStickyHeader = () => {
     router.push(`${http_url}/account-settings/${userId}`)
   }
 
-  async function getData() {
+  async function getData(pageToFetch) {
     try {
-      const response = await getAllUser(status, page, rowsPerPage)
+      if (visitedPages.includes(pageToFetch)) {
+        console.log(`Page ${pageToFetch} has already been visited. Skipping API call.`)
+        return
+      }
+
+      const response = await getAllUser(status, pageToFetch, rowsPerPage)
       const { code, message, data } = response
-      if (code == 200) {
-        setTotalPages(data.totalPages)
+
+      if (code === 200) {
         setTotalPosts(data.totalElements)
-        const dataUser = data.data.map((item, index) =>
-          createData(item.id, item.display, item.username, item.role, item.status, item.createdAt, editButtons(item.id))
-        )
-        setRows(dataUser)
+
+        const mergeRows = [
+          ...rows,
+          ...data.data.map((item, index) =>
+            createData(
+              item.id,
+              item.display,
+              item.username,
+              item.role,
+              item.status,
+              item.createdAt,
+              editButtons(item.id)
+            )
+          )
+        ]
+        setRows(mergeRows)
+
+        setVisitedPages([...visitedPages, pageToFetch])
       }
     } catch (error) {
-      console.log(error.message)
-
-      return
+      console.error(error.message)
     }
   }
 
   useEffect(() => {
-    getData()
-  }, [rowsPerPage])
+    getData(page)
+  }, [page, rowsPerPage])
 
   return (
     <Paper sx={{ width: '100%', overflow: 'hidden' }}>

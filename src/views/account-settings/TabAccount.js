@@ -84,11 +84,6 @@ const TabAccount = ({ dataAccount, setDataAccount }) => {
       }
 
       reader.readAsDataURL(selectedFile)
-
-      setDataAccount(prevDataAccount => ({
-        ...prevDataAccount,
-        avatar: selectedFile
-      }))
     }
   }
 
@@ -100,7 +95,7 @@ const TabAccount = ({ dataAccount, setDataAccount }) => {
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <ImgStyled src={dataUser.avatar || imgSrc} alt='Profile Pic' />
               <Box>
-                <ButtonStyled component='label' variant='contained' htmlFor='account-settings-upload-image'>
+                {/* <ButtonStyled component='label' variant='contained' htmlFor='account-settings-upload-image'>
                   Tải hình ảnh
                   <input
                     hidden
@@ -109,13 +104,10 @@ const TabAccount = ({ dataAccount, setDataAccount }) => {
                     accept='image/png, image/jpeg'
                     id='account-settings-upload-image'
                   />
-                </ButtonStyled>
-                <ResetButtonStyled color='error' variant='outlined' onClick={() => setImgSrc('/images/avatars/1.png')}>
+                </ButtonStyled> */}
+                {/* <ResetButtonStyled color='error' variant='outlined' onClick={() => setImgSrc('/images/avatars/1.png')}>
                   Reset
-                </ResetButtonStyled>
-                <Typography variant='body2' sx={{ marginTop: 5 }}>
-                  Allowed PNG or JPEG. Max size of 800K.
-                </Typography>
+                </ResetButtonStyled> */}
               </Box>
             </Box>
           </Grid>

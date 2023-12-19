@@ -13,6 +13,7 @@ const TatCaTaiKhoan = () => {
           <CardHeader title='Quản lý tài khoản' titleTypographyProps={{ variant: 'h6' }} />
           <TableStickyHeader />
         </Card>
+        <div style={{ height: 100 }} />
       </Grid>
     </Grid>
   )

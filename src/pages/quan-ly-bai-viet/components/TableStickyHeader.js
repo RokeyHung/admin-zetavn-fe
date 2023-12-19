@@ -36,20 +36,22 @@ const TableStickyHeader = () => {
   // ** States
   const [rows, setRows] = useState([])
   const [page, setPage] = useState(0)
-  const [totalPages, setTotalPages] = useState(0)
   const [totalPosts, setTotalPosts] = useState(0)
-  const [rowsPerPage, setRowsPerPage] = useState(5)
+  const [rowsPerPage, setRowsPerPage] = useState(10)
   const [status, setStatus] = useState('')
   const [openModal, setOpenModal] = useState(false)
   const [openModalStatus, setOpenModalStatus] = useState(false)
   const [dataPost, setDataPost] = useState({})
+  const [visitedPages, setVisitedPages] = useState([])
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
   }
 
   const handleChangeRowsPerPage = event => {
+    setVisitedPages([page])
     setRowsPerPage(+event.target.value)
+    setPage(0)
   }
 
   const handleShowPostId = async postId => {
@@ -152,25 +154,35 @@ const TableStickyHeader = () => {
     )
   }
 
-  async function getData() {
+  async function getData(pageToFetch) {
     try {
+      if (visitedPages.includes(pageToFetch)) {
+        console.log(`Page ${pageToFetch} has already been visited. Skipping API call.`)
+        return
+      }
+
       const response = await getAllPosts(status, page, rowsPerPage)
       const { code, message, data } = response
+
       if (code == 200) {
-        setTotalPages(data.totalPages)
         setTotalPosts(data.totalElements)
-        const dataPost = data.data.map((item, index) =>
-          createData(
-            item.id,
-            item.user.display,
-            item.content.substring(0, 100) + '...',
-            item.accessModifier,
-            item.createdAt,
-            item.status,
-            editButtons(item.id)
+        const mergeRows = [
+          ...rows,
+          ...data.data.map(item =>
+            createData(
+              item.id,
+              item.user.display,
+              item.content.substring(0, 100) + '...',
+              item.accessModifier,
+              item.createdAt,
+              item.status,
+              editButtons(item.id)
+            )
           )
-        )
-        setRows(dataPost)
+        ]
+        setRows(mergeRows)
+
+        setVisitedPages([...visitedPages, pageToFetch])
       }
     } catch (error) {
       alert(error.message)
@@ -180,8 +192,8 @@ const TableStickyHeader = () => {
   }
 
   useEffect(() => {
-    getData()
-  }, [rowsPerPage, page])
+    getData(page)
+  }, [page, rowsPerPage])
 
   return (
     <Paper sx={{ width: '100%', overflow: 'hidden' }}>
@@ -216,7 +228,7 @@ const TableStickyHeader = () => {
         </Table>
       </TableContainer>
       <TablePagination
-        rowsPerPageOptions={[5, 25, 100]}
+        rowsPerPageOptions={[10, 25, 100]}
         component='div'
         count={totalPosts}
         rowsPerPage={rowsPerPage}
