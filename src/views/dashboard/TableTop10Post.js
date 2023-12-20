@@ -11,13 +11,14 @@ import TableContainer from '@mui/material/TableContainer'
 import { formatNumber } from '../../utils/index'
 
 const DashboardTable = ({ dataRow }) => {
+  console.log(dataRow)
   return (
     <Card>
       <TableContainer>
         <Table aria-label='table in dashboard'>
           <TableHead>
             <TableRow>
-              <TableCell>Người dùng</TableCell>
+              <TableCell>Bài Viết</TableCell>
               <TableCell>Likes</TableCell>
               <TableCell>Comments</TableCell>
               <TableCell>Ngày đăng</TableCell>
@@ -29,10 +30,10 @@ const DashboardTable = ({ dataRow }) => {
                 <TableCell sx={{ py: theme => `${theme.spacing(0.5)} !important`, maxWidth: '150px !important' }}>
                   <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                     <Typography sx={[{ fontWeight: 500, fontSize: '1rem !important' }, textStyle]}>
-                      {row?.user?.display || ''}
+                      {row?.content.substring(0, 30) + '...' || ''}
                     </Typography>
                     <Typography variant='caption' sx={textStyle}>
-                      {row?.user?.username || ''}
+                      {row?.user?.display || ''}
                     </Typography>
                   </Box>
                 </TableCell>
